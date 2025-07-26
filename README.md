@@ -81,6 +81,13 @@ python manage.py runserver
 ## Структура проекта:
 ```
 DjangoREST/
+├── config/
+|   ├── __init__.py
+|   ├── asgi.py
+|   ├── settings.py # настройки проекта
+|   ├── urls.py # маршрутизация проета
+|   └── wsgi.py
+├── .env
 ├── .flake8 # настройка для flake8
 ├── .gitignore
 ├── poetry.lock
