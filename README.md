@@ -7,6 +7,10 @@
 - [Установка](#установка)
 - [Запуск проекта](#запуск-проекта)
 - [Структура проекта](#структура-проекта)
+- [Приложение lms](#приложение-lms)
+  - [Models lms](#models-lms)
+    - [Course](#course)
+    - [Lesson](#lesson)
 - [Приложение users](#приложение-users)
   - [Models user](#models-users)
     - [User](#user)
@@ -91,6 +95,15 @@ DjangoREST/
 |   ├── settings.py # настройки проекта
 |   ├── urls.py # маршрутизация проета
 |   └── wsgi.py
+├── lms/ # приложение lms-система
+|   ├── migrations/ # пакет миграции моделей
+|   |   ├── 0001_initial.py
+|   |   └── __init__.py
+|   ├── admin.py 
+|   ├── apps.py
+|   ├── models.py # модели БД
+|   ├── tests.py 
+|   └── views.py # конструктор контроллеров
 ├── users/ # приложение аутефикации
 |   ├── migrations/ # пакет миграции моделей
 |   |   ├── 0001_initial.py
@@ -112,6 +125,27 @@ DjangoREST/
 [<- на начало](#содержание)
 
 ---
+# Приложение lms:
+
+---
+## Models lms
+### Course:
+Представление курса
+Атрибуты:
+- title(str): Название курса
+- preview(ImageField): Превью курса
+- description(str): Описание курса
+### Lesson:
+Представление урока
+Атрибуты:
+- title(str): Название урока
+- description(str): Описание урока
+- preview(ImageField): Превью урока
+- video_url(URLField): Ссылка на видео
+- courses(ForeignKey): Курс (внешний ключ на модель Course(Курс))
+
+[<- на начало](#содержание)
+
 ---
 # Приложение users:
 
@@ -126,7 +160,6 @@ DjangoREST/
 - phone_number(str): Номер телефона
 - city(str): Город
 - avatar(ImageField): Аватар (изображение)
-
 
 [<- на начало](#содержание)
 
