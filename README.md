@@ -6,6 +6,7 @@
 - [Установка Poetry](#установка-poetry)
 - [Установка](#установка)
 - [Запуск проекта](#запуск-проекта)
+- [Структура проекта](#структура-проекта)
 
 ## Описание:
 
@@ -64,8 +65,8 @@ poetry install
 ```
 или
 ```bash
-poetry add django python-dotenv psycopg2 pillow 
-poetry add --group lint flake8 black isort mypy ipython
+poetry add django python-dotenv psycopg2 pillow djangorestframework
+poetry add --group lint flake8 black isort mypy==1.16.0
 ```
 - Зайдите в файл .env.example и следуйте инструкция
 
@@ -76,3 +77,18 @@ poetry add --group lint flake8 black isort mypy ipython
 ```bash
 python manage.py runserver
 ```
+
+## Структура проекта:
+```
+DjangoREST/
+├── .flake8 # настройка для flake8
+├── .gitignore
+├── poetry.lock
+├── pypproject.toml # зависимости для poetry
+├── README.md
+└── requirements.txt # зависимости для pip
+```
+
+[<- на начало](#содержание)
+
+---
