@@ -11,9 +11,13 @@
   - [Models lms](#models-lms)
     - [Course](#course)
     - [Lesson](#lesson)
+  - [Serializers lms](#serializers-lms)
+  - [Urls lms](#urls-lms)
+  - [Views lms](#views-lms)
 - [Приложение users](#приложение-users)
   - [Models user](#models-users)
     - [User](#user)
+
 
 
 ## Описание:
