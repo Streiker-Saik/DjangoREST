@@ -1,14 +1,14 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from lms.views import CourseViewSet, LessonCreateAPIView, LessonListAPIView, LessonRetrieveAPIView, LessonUpdateAPIView, \
-    LessonDestroyAPIView
 from lms.apps import ImsConfig
+from lms.views import (CourseViewSet, LessonCreateAPIView, LessonDestroyAPIView, LessonListAPIView,
+                       LessonRetrieveAPIView, LessonUpdateAPIView)
 
 app_name = ImsConfig.name
 
 router = DefaultRouter()
-router.register(r"", CourseViewSet, basename='course')
+router.register(r"", CourseViewSet, basename="course")
 
 urlpatterns = [
     path("lessons/", LessonListAPIView.as_view(), name="lessons-list"),

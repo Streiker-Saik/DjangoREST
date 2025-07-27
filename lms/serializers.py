@@ -13,6 +13,7 @@ class CourseSerializer(ModelSerializer):
 
 class LessonSerializer(ModelSerializer):
     """Сериализатор для модели Lesson"""
+
     class Meta:
         model = Lesson
         fields = "__all__"
