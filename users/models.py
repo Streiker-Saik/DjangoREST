@@ -8,21 +8,21 @@ class User(AbstractUser):
     Поле авторизации с username изменено на email.
     Так же username обязательное поле при авторизации
     Атрибуты:
-        username(str): Уникальный логин
+        username: Логин отключен
         email(str): Уникальный email
         phone_number(str): Номер телефона
         city(str): Город
         avatar(ImageField): Аватар (изображение)
     """
 
-    username = models.CharField(max_length=150, verbose_name="Логин")
+    username = None
     email = models.EmailField(unique=True, verbose_name="Email")
     phone_number = models.CharField(max_length=15, blank=True, null=True, verbose_name="Номер телефона")
     city = models.CharField(max_length=65, blank=True, null=True, verbose_name="Город")
     avatar = models.ImageField(upload_to="avatars/", blank=True, null=True, verbose_name="Аватар")
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["username"]
+    REQUIRED_FIELDS = []
 
     def __str__(self) -> str:
         """

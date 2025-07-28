@@ -15,8 +15,11 @@
   - [Urls lms](#urls-lms)
   - [Views lms](#views-lms)
 - [Приложение users](#приложение-users)
-  - [Models user](#models-users)
+  - [Models users](#models-users)
     - [User](#user)
+  - [Serializers lms](#serializers-users)
+  - [Urls lms](#urls-users)
+  - [Views lms](#views-users)
 
 
 
@@ -117,7 +120,9 @@ DjangoREST/
 |   ├── admin.py 
 |   ├── apps.py
 |   ├── models.py # модели БД
+|   ├── seriazers.py # сериализаторы приложения
 |   ├── tests.py 
+|   ├── urls.py # маршрутизация приложения
 |   └── views.py # конструктор контроллеров
 ├── .env
 ├── .flake8 # настройка для flake8
@@ -215,11 +220,38 @@ DjangoREST/
 Представление кастомного пользователя, расширяющее AbstractUser.
 Поле авторизации с username изменено на email. Так же username обязательное поле при авторизации
 Атрибуты:
-- username(str): Уникальный логин
+- username: Логин **отключен**
 - email(str): Уникальный email
 - phone_number(str): Номер телефона
 - city(str): Город
 - avatar(ImageField): Аватар (изображение)
+
+[<- на начало](#содержание)
+
+---
+## Serializers users:
+### UserSerializer:
+Сериализатор для модели User.
+Показывает все поля, кроме: password
+
+[<- на начало](#содержание)
+
+---
+## Urls lms:
+- Список пользователей (доступны методы: **GET/POST**)
+  http://127.0.0.1:8000/users/
+- Получение пользователя (доступны методы: **GET/PUT/PATH/DELETE**)
+  http://127.0.0.1:8000/users/(pk)/
+  - где (pk) - это, целое число PrimaryKey, ID пользователя
+
+[<- на начало](#содержание)
+
+---
+## Views users:
+### UserViewSet:
+Представление набора действий для модели User.  
+Позволяет выполнять операции с пользователями:
+отображение списка, создание, отображение, полное обновление, частичное обновление, удаление.
 
 [<- на начало](#содержание)
 
