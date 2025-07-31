@@ -329,6 +329,7 @@ DjangoREST/
   - last_name(str): Фамилия пользователя
   - phone_number(str): Номер телефона пользователя.
   - city(str): Город пользователя.
+  - payments(list): Список платежей (PaymentSerializer)
 ### PaymentSerializer:
 Сериализатор для модели Payment.
 - Показывает поля:
