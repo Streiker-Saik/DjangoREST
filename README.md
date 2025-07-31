@@ -113,12 +113,19 @@ python manage.py csu
 ```
 python manage.py csu --email ввести_адрес_почты --password ввести_пароль
 ```
-### add_test_data
+### add_test_data_lms
 Команда для добавления тестовых данных(курсы, уроки) из fixture
 - 'lms/fixture/course_fixture.json'
 - 'lms/fixture/lesson_fixture.json
 ```bash
-python manage.py add_test_data
+python manage.py add_test_data_lms
+```
+### add_test_data_users
+Команда для добавления тестовых данных(курсы, уроки) из fixture
+- 'users/fixture/user_fixture.json'
+- 'users/fixture/payment_fixture.json
+```bash
+python manage.py add_test_data_users
 ```
 
 [<- на начало](#содержание)
@@ -134,8 +141,16 @@ DjangoREST/
 |   ├── urls.py # маршрутизация проета
 |   └── wsgi.py
 ├── lms/ # приложение lms-система
+|   ├── fixture/ # фикстуры
+|   |   └── ...
+|   ├── management/
+|   |   └── commands
+|   |   |   ├── add_test_data_lms.py # команда заполнения тестовыми данными БД
+|   |   |   └── __init__.py
+|   |   └── __init__.py
 |   ├── migrations/ # пакет миграции моделей
 |   |   ├── 0001_initial.py
+|   |   ├── ...
 |   |   └── __init__.py
 |   ├── admin.py 
 |   ├── apps.py
@@ -145,8 +160,16 @@ DjangoREST/
 |   ├── urls.py # маршрутизация приложения
 |   └── views.py # конструктор контроллеров
 ├── users/ # приложение аутефикации
+|   ├── management/
+|   |   └── commands
+|   |   |   ├── csu.py # Создание суперюзера
+|   |   |   ├── create_user.py # Создание пользователя
+|   |   |   ├── add_test_data_users.py # команда заполнения тестовыми данными БД
+|   |   |   └── __init__.py
+|   |   └── __init__.py
 |   ├── migrations/ # пакет миграции моделей
 |   |   ├── 0001_initial.py
+|   |   ├── ...
 |   |   └── __init__.py
 |   ├── admin.py 
 |   ├── apps.py
@@ -173,18 +196,18 @@ DjangoREST/
 ## Models lms
 ### Course:
 Представление курса
-Атрибуты:
-- title(str): Название курса
-- preview(ImageField): Превью курса
-- description(str): Описание курса
+- Атрибуты:
+  - title(str): Название курса
+  - preview(ImageField): Превью курса
+  - description(str): Описание курса
 ### Lesson:
 Представление урока
-Атрибуты:
-- title(str): Название урока
-- description(str): Описание урока
-- preview(ImageField): Превью урока
-- video_url(URLField): Ссылка на видео
-- courses(ForeignKey): Курс (внешний ключ на модель Course(Курс))
+- Атрибуты:
+  - title(str): Название урока
+  - description(str): Описание урока
+  - preview(ImageField): Превью урока
+  - video_url(URLField): Ссылка на видео
+  - courses(ForeignKey): Курс (внешний ключ на модель Course(Курс))
 
 [<- на начало](#содержание)
 
@@ -192,23 +215,23 @@ DjangoREST/
 ## Serializers lms:
 ### CourseSerializer:
 Сериализатор для модели Course
-Отображаются поля:
-- id(int): Уникальный идентификатор курса.
-- count_lessons(int): Количество уроков в курсе
-- title(str): Название курса.
-- preview(ImageField): Превью курса.
-- description(str): Описание курса.
-Методы:
-- get_count_lessons(self, obj) -> int: Получение количества уроков в курсе
+- Отображаются поля:
+  - id(int): Уникальный идентификатор курса.
+  - count_lessons(int): Количество уроков в курсе
+  - title(str): Название курса.
+  - preview(ImageField): Превью курса.
+  - description(str): Описание курса.
+- Методы:
+  - get_count_lessons(self, obj) -> int: Получение количества уроков в курсе
 ### LessonSerializer:
 Сериализатор для модели Lesson
-Отображаются поля:
-- id(int): Уникальный идентификатор урока.
-- title(str): Название урока.
-- description(str): Описание урока.
-- preview(ImageField): Превью урока.
-- video_url(URLField): Ссылка на видео урока.
-- courses(ForeignKey): Внешний ключ на курс.
+- Отображаются поля:
+  - id(int): Уникальный идентификатор урока.
+  - title(str): Название урока.
+  - description(str): Описание урока.
+  - preview(ImageField): Превью урока.
+  - video_url(URLField): Ссылка на видео урока.
+  - courses(ForeignKey): Внешний ключ на курс.
 
 [<- на начало](#содержание)
 
@@ -260,12 +283,12 @@ DjangoREST/
 ## Admin users
 ### CustomUserAdmin
 Класс для работы администратора с пользователями
-Атрибуты:
-- ordering - сортировка по email
-- list_filter - фильтрация активный пользователь или нет
-- exclude - исключит поле пароля
-- list_display - выводит на экран: email, имя, фамилия, супер юзер, сотрудник, активный
-- search_fields - поиск по: email
+- Атрибуты:
+  - ordering - сортировка по email
+  - list_filter - фильтрация активный пользователь или нет
+  - exclude - исключит поле пароля
+  - list_display - выводит на экран: email, имя, фамилия, супер юзер, сотрудник, активный
+  - search_fields - поиск по: email
 
 [<- на начало](#содержание)
 
@@ -274,14 +297,23 @@ DjangoREST/
 ### User:
 Представление кастомного пользователя, расширяющее AbstractUser.
 Поле авторизации с username изменено на email. Так же username обязательное поле при авторизации
-Атрибуты:
-- username: Логин **отключен**
-- email(str): Уникальный email
-- phone_number(str): Номер телефона
-- city(str): Город
-- avatar(ImageField): Аватар (изображение)
+- Атрибуты:
+  - username: Логин **отключен**
+  - email(str): Уникальный email
+  - phone_number(str): Номер телефона
+  - city(str): Город
+  - avatar(ImageField): Аватар (изображение)
 ### Payment:
-Представление платежа.
+Представление платежа.  
+- Атрибуты:
+  - user(ForeignKey): Пользователь (внешний ключ на модель «Пользователя»)
+  - date_pay(datetime): Дата платежа
+  - course(ForeignKey): Курс (внешний ключ на модель «Курс»)
+  - lesson(ForeignKey): Урок (внешний ключ на модель «Урок»)
+  - amount(int): Сумма платежа
+  - payment_method(str): Способ оплаты. Возможные значения:
+    - cash - Наличные,
+    - transfer - Перевод на счет
 
 
 [<- на начало](#содержание)
@@ -290,12 +322,12 @@ DjangoREST/
 ## Serializers users:
 ### UserSerializer:
 Сериализатор для модели Users.
-Показывает поля: 
-- id(int): Уникальный идентификатор пользователя.
-- first_name(str): Имя пользователя.
-- last_name(str): Фамилия пользователя
-- phone_number(str): Номер телефона пользователя.
-- city(str): Город пользователя.
+- Показывает поля: 
+  - id(int): Уникальный идентификатор пользователя.
+  - first_name(str): Имя пользователя.
+  - last_name(str): Фамилия пользователя
+  - phone_number(str): Номер телефона пользователя.
+  - city(str): Город пользователя.
 
 [<- на начало](#содержание)
 
