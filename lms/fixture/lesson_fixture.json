@@ -1,0 +1,35 @@
+[
+{
+    "model": "lms.lesson",
+    "pk": 1,
+    "fields": {
+        "title": "1. Основы алгоритмизации",
+        "description": null,
+        "preview": "",
+        "video_url": null,
+        "courses": 1
+    }
+},
+{
+    "model": "lms.lesson",
+    "pk": 2,
+    "fields": {
+        "title": "2.1 Типы данных",
+        "description": null,
+        "preview": "",
+        "video_url": null,
+        "courses": 1
+    }
+},
+    {
+    "model": "lms.lesson",
+    "pk": 3,
+    "fields": {
+        "title": "Погружение в Java-разработку",
+        "description": null,
+        "preview": "",
+        "video_url": null,
+        "courses": 2
+    }
+}
+]
