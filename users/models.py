@@ -1,5 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from rest_framework.exceptions import ValidationError
+
+from lms.models import Course, Lesson
 
 
 class User(AbstractUser):
@@ -34,3 +37,43 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "пользователь"
         verbose_name_plural = "пользователи"
+
+
+class Payment(models.Model):
+    """
+    Представление платежа
+    Атрибуты:
+        user(ForeignKey): Пользователь (внешний ключ на модель «Пользователя»)
+        date_pay(datetime): Дата платежа
+        course(ForeignKey): Курс (внешний ключ на модель «Курс»)
+        lesson(ForeignKey): Урок (внешний ключ на модель «Урок»)
+        amount(int): Сумма платежа
+        payment_method(str): Способ оплаты. Возможные значения:
+            cash - Наличные,
+            transfer - Перевод на счет
+    """
+
+    PAYMENT_METHOD_CHOICES = [("cash", 'Наличные'), ('transfer', 'Перевод на счет'), ]
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="payments", verbose_name="Пользователь")
+    date_pay = models.DateField(verbose_name="Дата оплаты")
+    course = models.ForeignKey(
+        Course, on_delete=models.SET_NULL, related_name="payments", blank=True, null=True, verbose_name="Курс"
+    )
+    lesson = models.ForeignKey(
+        Lesson, on_delete=models.SET_NULL, related_name="payments", blank=True, null=True, verbose_name="Урок"
+    )
+    amount = models.PositiveIntegerField(verbose_name="Сумма оплаты")
+    payment_method = models.CharField(max_length=10, choices=PAYMENT_METHOD_CHOICES, verbose_name="Способ оплаты")
+
+    def __str__(self) -> str:
+        """
+        Строковое представление платежа
+        :return: Оплачено: Курс - ..., Урок - ..., Сумма - ...
+        """
+        course_name = self.course.name if self.course else "Не указано"
+        lesson_name = self.lesson.name if self.lesson else "Не указано"
+        return f"Оплачено: Курс - {course_name}, Урок - {lesson_name}, Сумма - {self.amount}"
+
+    class Meta:
+        verbose_name = "платеж"
+        verbose_name_plural = "платежи"
