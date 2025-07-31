@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
-from users.models import User
+from users.models import User, Payment
 
 
 class UserSerializer(ModelSerializer):
@@ -9,7 +9,7 @@ class UserSerializer(ModelSerializer):
     Показывает поля:
         id(int): Уникальный идентификатор пользователя.
         first_name(str): Имя пользователя.
-        last_name(str): Фамилия пользователя
+        last_name(str): Фамилия пользователя.
         phone_number(str): Номер телефона пользователя.
         city(str): Город пользователя.
     """
@@ -17,3 +17,21 @@ class UserSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ("id", "first_name", "last_name", "phone_number", "city")
+
+
+class PaymentSerializer(ModelSerializer):
+    """
+    Сериализатор для модели Payment.
+    Показывает поля:
+        id(int): Уникальный идентификатор платежа.
+        date_pay(datetime): Дата платежа.
+        amount(str): Сумма платежа.
+        payment_method(str): Метод платежа.
+        user(ForeignKey): Внешний ключ на пользователя.
+        course(ForeignKey): Внешний ключ на курс.
+        lesson(ForeignKey): Внешний ключ на урок.
+    """
+
+    class Meta:
+        model = Payment
+        fields = "__all__"

@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
       "user": 2,
-      "date_pay": "2025-07-31",
+      "date_pay": "2025-07-30",
       "course": 1,
       "lesson": 1,
       "amount": 1000,
@@ -18,7 +18,7 @@
       "user": 3,
       "date_pay": "2025-07-31",
       "course": 2,
-      "lesson": 1,
+      "lesson": 3,
       "amount": 1000,
       "payment_method": "transfer"
     }

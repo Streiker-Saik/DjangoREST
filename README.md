@@ -218,6 +218,7 @@ DjangoREST/
 - Отображаются поля:
   - id(int): Уникальный идентификатор курса.
   - count_lessons(int): Количество уроков в курсе
+  - lessons(list): Список уроков (LessonSerializer)
   - title(str): Название курса.
   - preview(ImageField): Превью курса.
   - description(str): Описание курса.
@@ -328,6 +329,16 @@ DjangoREST/
   - last_name(str): Фамилия пользователя
   - phone_number(str): Номер телефона пользователя.
   - city(str): Город пользователя.
+### PaymentSerializer:
+Сериализатор для модели Payment.
+- Показывает поля:
+  - id(int): Уникальный идентификатор платежа.
+  - date_pay(datetime): Дата платежа.
+  - amount(str): Сумма платежа.
+  - payment_method(str): Метод платежа.
+  - user(ForeignKey): Внешний ключ на пользователя.
+  - course(ForeignKey): Внешний ключ на курс.
+  - lesson(ForeignKey): Внешний ключ на урок.
 
 [<- на начало](#содержание)
 
@@ -341,6 +352,18 @@ DjangoREST/
 - Редактирование пользователя (доступны методы: **PUT/PATH**)
   http://127.0.0.1:8000/users/(pk)/update/
   - где (pk) - это, целое число PrimaryKey, ID пользователя
+- Список платежей (доступны методы: **GET**)
+  http://127.0.0.1:8000/users/payments/
+  - Сортировка по дате  
+    - http://127.0.0.1:8000/users/payments/?ordering=date_pay # по возрастанию  
+    - http://127.0.0.1:8000/users/payments/?ordering=-date_pay # по убыванию
+  - Фильтрации
+    - http://127.0.0.1:8000/users/payments/?course=(pk) # по курсу  
+    где (pk) - это, целое число PrimaryKey, ID курса
+    - http://127.0.0.1:8000/users/payments/?lesson=(pk) # по уроку  
+    где (pk) - это, целое число PrimaryKey, ID урока
+    - http://127.0.0.1:8000/users/payments/?course=(payment_method) # по типу платежа  
+    где (payment_method) - это тип платежа cash|transfer
 
 [<- на начало](#содержание)
 
@@ -352,6 +375,10 @@ DjangoREST/
 Представление для получения пользователя по идентификатору (GET)
 ### UserUpdateAPIView:
 Представление для обновления пользователя по идентификатору (PUT/PATH)
+### PaymentListAPIView:
+Представление для получения списка всех платежей (GET)
+Сортировка: дате(date_pay)
+Фильтрация: курсу(course), уроку(lesson), методу платежа(payment_method)
 
 [<- на начало](#содержание)
 
