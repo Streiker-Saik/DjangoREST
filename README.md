@@ -17,9 +17,9 @@
 - [Приложение users](#приложение-users)
   - [Models users](#models-users)
     - [User](#user)
-  - [Serializers lms](#serializers-users)
-  - [Urls lms](#urls-users)
-  - [Views lms](#views-users)
+  - [Serializers user](#serializers-users)
+  - [Urls user](#urls-users)
+  - [Views user](#views-users)
 
 
 
@@ -80,7 +80,7 @@ poetry install
 ```
 или
 ```bash
-poetry add django python-dotenv psycopg2 pillow djangorestframework
+poetry add django python-dotenv psycopg2 pillow djangorestframework django-filter
 poetry add --group lint flake8 black isort mypy==1.16.0
 ```
 - Зайдите в файл .env.example и следуйте инструкция
@@ -237,7 +237,7 @@ DjangoREST/
 [<- на начало](#содержание)
 
 ---
-## Urls lms:
+## Urls users:
 - Список пользователей (доступны методы: **GET**)
   http://127.0.0.1:8000/users/
 - Получение одного пользователя (доступны методы: **GET**)
