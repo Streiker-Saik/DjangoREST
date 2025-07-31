@@ -4,8 +4,11 @@ from users.models import User
 
 
 class UserSerializer(ModelSerializer):
-    """Сериализатор для модели Users"""
+    """
+    Сериализатор для модели Users.
+    Показывает поля: id, first_name, last_name, phone_number, city.
+    """
 
     class Meta:
         model = User
-        exclude = ("password",)
+        fields = ("id", "first_name", "last_name", "phone_number", "city")
