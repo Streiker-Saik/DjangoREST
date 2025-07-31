@@ -160,11 +160,24 @@ DjangoREST/
 ---
 ## Serializers lms:
 ### CourseSerializer:
-Сериализатор для модели Course.
-Показывает все поля.
+Сериализатор для модели Course
+Отображаются поля:
+- id(int): Уникальный идентификатор курса.
+- count_lessons(int): Количество уроков в курсе
+- title(str): Название курса.
+- preview(ImageField): Превью курса.
+- description(str): Описание курса.
+Методы:
+- get_count_lessons(self, obj) -> int: Получение количества уроков в курсе
 ### LessonSerializer:
-Сериализатор для модели Lesson.
-Показывает все поля.
+Сериализатор для модели Lesson
+Отображаются поля:
+- id(int): Уникальный идентификатор урока.
+- title(str): Название урока.
+- description(str): Описание урока.
+- preview(ImageField): Превью урока.
+- video_url(URLField): Ссылка на видео урока.
+- courses(ForeignKey): Внешний ключ на курс.
 
 [<- на начало](#содержание)
 
@@ -231,8 +244,13 @@ DjangoREST/
 ---
 ## Serializers users:
 ### UserSerializer:
-Сериализатор для модели User.
-Показывает поля: id, first_name, last_name, phone_number, city
+Сериализатор для модели Users.
+Показывает поля: 
+- id(int): Уникальный идентификатор пользователя.
+- first_name(str): Имя пользователя.
+- last_name(str): Фамилия пользователя
+- phone_number(str): Номер телефона пользователя.
+- city(str): Город пользователя.
 
 [<- на начало](#содержание)
 
