@@ -16,6 +16,7 @@
   - [Urls lms](#urls-lms)
   - [Views lms](#views-lms)
 - [Приложение users](#приложение-users)
+  - [Admin users](#admin-users)
   - [Models users](#models-users)
     - [User](#user)
   - [Serializers user](#serializers-users)
@@ -102,6 +103,16 @@ python manage.py runserver
 
 ---
 ## Кастомные команды
+### csu
+Команда для создания суперпользователя по ключам email и password.
+Если не указано, то: email='admin@example.com', password='admin'.
+```bash
+python manage.py csu
+```
+или
+```
+python manage.py csu --email ввести_адрес_почты --password ввести_пароль
+```
 ### add_test_data
 Команда для добавления тестовых данных(курсы, уроки) из fixture
 - 'lms/fixture/course_fixture.json'
@@ -246,6 +257,17 @@ DjangoREST/
 ---
 
 # Приложение users:
+## Admin users
+### CustomUserAdmin
+Класс для работы администратора с пользователями
+Атрибуты:
+- ordering - сортировка по email
+- list_filter - фильтрация активный пользователь или нет
+- exclude - исключит поле пароля
+- list_display - выводит на экран: email, имя, фамилия, супер юзер, сотрудник, активный
+- search_fields - поиск по: email
+
+[<- на начало](#содержание)
 
 ---
 ## Models users
