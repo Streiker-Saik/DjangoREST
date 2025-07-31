@@ -357,13 +357,14 @@ DjangoREST/
   - Сортировка по дате  
     - http://127.0.0.1:8000/users/payments/?ordering=date_pay # по возрастанию  
     - http://127.0.0.1:8000/users/payments/?ordering=-date_pay # по убыванию
-  - Фильтрации
+  - Фильтрации  
+    http://127.0.0.1:8000/users/payments/?course=(pk)&lesson=(pk)&payment_method=(pm)
     - http://127.0.0.1:8000/users/payments/?course=(pk) # по курсу  
     где (pk) - это, целое число PrimaryKey, ID курса
     - http://127.0.0.1:8000/users/payments/?lesson=(pk) # по уроку  
     где (pk) - это, целое число PrimaryKey, ID урока
-    - http://127.0.0.1:8000/users/payments/?course=(payment_method) # по типу платежа  
-    где (payment_method) - это тип платежа cash|transfer
+    - http://127.0.0.1:8000/users/payments/?payment_method=(pm) # по типу платежа  
+    где (pm) - это тип платежа cash|transfer
 
 [<- на начало](#содержание)
 

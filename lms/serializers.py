@@ -34,6 +34,7 @@ class CourseSerializer(ModelSerializer):
         get_count_lessons(self, obj) -> int:
             Получение количества уроков в курсе
     """
+
     count_lessons = SerializerMethodField()
     lessons = LessonSerializer(many=True)
 

@@ -15,7 +15,6 @@ class Command(BaseCommand):
         Course.objects.all().delete()
         Lesson.objects.all().delete()
 
-
         call_command(
             "loaddata",
             (

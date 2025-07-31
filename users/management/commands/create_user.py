@@ -27,10 +27,10 @@ class Command(BaseCommand):
         email = options["email"]
         password = options["password"]
         if User.objects.filter(email=email).exists():
-            self.stdout.write(self.style.ERROR('Пользователь с данным email уже существует.'))
+            self.stdout.write(self.style.ERROR("Пользователь с данным email уже существует."))
         else:
             self.custom_create_user(email, password)
-            self.stdout.write(self.style.SUCCESS(f'Пользователь {email} создан успешно!'))
+            self.stdout.write(self.style.SUCCESS(f"Пользователь {email} создан успешно!"))
 
     @staticmethod
     def custom_create_user(email: str, password: str) -> None:
@@ -39,5 +39,3 @@ class Command(BaseCommand):
         user.set_password(password)
         user.is_active = True
         user.save()
-
-

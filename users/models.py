@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from rest_framework.exceptions import ValidationError
 
 from lms.models import Course, Lesson
 
@@ -53,7 +52,10 @@ class Payment(models.Model):
             transfer - Перевод на счет
     """
 
-    PAYMENT_METHOD_CHOICES = [("cash", 'Наличные'), ('transfer', 'Перевод на счет'), ]
+    PAYMENT_METHOD_CHOICES = [
+        ("cash", "Наличные"),
+        ("transfer", "Перевод на счет"),
+    ]
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="payments", verbose_name="Пользователь")
     date_pay = models.DateField(verbose_name="Дата оплаты")
     course = models.ForeignKey(
