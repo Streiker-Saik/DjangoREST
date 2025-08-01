@@ -70,11 +70,9 @@ class Payment(models.Model):
     def __str__(self) -> str:
         """
         Строковое представление платежа
-        :return: Оплачено: Курс - ..., Урок - ..., Сумма - ...
+        :return: Оплачено: Дата - ..., Сумма - ...
         """
-        course_name = self.course.name if self.course else "Не указано"
-        lesson_name = self.lesson.name if self.lesson else "Не указано"
-        return f"Оплачено: Курс - {course_name}, Урок - {lesson_name}, Сумма - {self.amount}"
+        return f"Оплачено: Дата - {self.date_pay}, Сумма - {self.amount}"
 
     class Meta:
         verbose_name = "платеж"
