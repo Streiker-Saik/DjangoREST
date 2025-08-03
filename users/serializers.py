@@ -42,6 +42,20 @@ class UserSerializer(ModelSerializer):
         fields = ("id", "first_name", "last_name", "phone_number", "city", "payments")
 
 
+class UserGeneralSerializer(ModelSerializer):
+    """
+    Сериализатор общей информации для модели Users.
+    Показывает поля:
+        id(int): Уникальный идентификатор пользователя
+        email(str): Почта пользователя
+        city(str): Город пользователя.
+    """
+
+    class Meta:
+        model = User
+        fields = ("id", "email", "city")
+
+
 class UserCreateSerializer(ModelSerializer):
     """
     Сериализатор для создания модели Users.

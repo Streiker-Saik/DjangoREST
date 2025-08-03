@@ -8,6 +8,13 @@ class IsOwner(BasePermission):
         return obj.owner == request.user
 
 
+class IsProfileOwner(BasePermission):
+    """Право владельца профиля"""
+
+    def has_object_permission(self, request, view, obj):
+        return obj == request.user
+
+
 class IsModerator(BasePermission):
     """Право модератора"""
 
