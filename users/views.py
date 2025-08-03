@@ -1,9 +1,10 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
-from rest_framework.generics import ListAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView, UpdateAPIView, CreateAPIView, DestroyAPIView
+from rest_framework.permissions import AllowAny
 
 from users.models import Payment, User
-from users.serializers import PaymentSerializer, UserSerializer
+from users.serializers import PaymentSerializer, UserSerializer, UserCreateSerializer
 
 
 class UserListAPIView(ListAPIView):
@@ -11,6 +12,18 @@ class UserListAPIView(ListAPIView):
 
     serializer_class = UserSerializer
     queryset = User.objects.all()
+
+
+class UserCrateAPIView(CreateAPIView):
+    """Представление для создания пользователя (POST)"""
+    serializer_class = UserCreateSerializer
+    queryset = User.objects.all()
+    permission_classes = (AllowAny,)
+
+    def perform_create(self, serializer):
+        """Сохраняет нового пользователя и устанавливает его активным."""
+        user = serializer.save(is_active=True)
+        user.save()
 
 
 class UserRetrieveAPIView(RetrieveAPIView):
@@ -23,6 +36,12 @@ class UserRetrieveAPIView(RetrieveAPIView):
 class UserUpdateAPIView(UpdateAPIView):
     """Представление для обновления пользователя по идентификатору (PUT/PATH)"""
 
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+
+
+class UserDestroyAPIView(DestroyAPIView):
+    """Представление для удаления пользователя по идентификатору (DELETE)"""
     serializer_class = UserSerializer
     queryset = User.objects.all()
 

@@ -1,4 +1,4 @@
-from rest_framework.fields import SerializerMethodField
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from users.models import Payment, User
@@ -40,3 +40,26 @@ class UserSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ("id", "first_name", "last_name", "phone_number", "city", "payments")
+
+
+class UserCreateSerializer(ModelSerializer):
+    """
+    Сериализатор для создания модели Users.
+    Показывает поля:
+        id(int): Уникальный идентификатор пользователя
+        email(str): Почта пользователя
+        phone_number(str): Номер телефона пользователя
+        city(str): Город пользователя.
+    """
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'email', 'phone_number', 'city', 'password')
+
+    def create(self, validated_data):
+        """Создает нового пользователя и хэширует его пароль."""
+        user = User(**validated_data)
+        user.set_password(validated_data.pop("password"))
+        user.save()
+        return user
