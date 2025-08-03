@@ -1,5 +1,7 @@
 from django.db import models
 
+from config import settings
+
 
 class Course(models.Model):
     """
@@ -8,11 +10,20 @@ class Course(models.Model):
         title(str): Название курса
         preview(ImageField): Превью курса
         description(str): Описание курса
+        owner(ForeignKey): Владелец (внешний ключ на модель User(Пользователь))
     """
 
     title = models.CharField(max_length=255, verbose_name="Название курса")
     preview = models.ImageField(upload_to="courses/previews/", blank=True, null=True, verbose_name="Превью курса")
     description = models.TextField(blank=True, null=True, verbose_name="Описание курса")
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="courses",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        verbose_name="Владелец",
+    )
 
     def __str__(self) -> str:
         """
@@ -35,6 +46,7 @@ class Lesson(models.Model):
         preview(ImageField): Превью урока
         video_url(URLField): Ссылка на видео
         courses(ForeignKey): Курс (внешний ключ на модель Course(Курс))
+        owner(ForeignKey): Владелец (внешний ключ на модель User(Пользователь))
     """
 
     title = models.CharField(max_length=255, verbose_name="Название урок")
@@ -42,6 +54,14 @@ class Lesson(models.Model):
     preview = models.ImageField(upload_to="courses/previews/", blank=True, null=True, verbose_name="Превью урока")
     video_url = models.URLField(blank=True, null=True, verbose_name="Ссылка на видео")
     courses = models.ForeignKey(Course, related_name="lessons", on_delete=models.CASCADE, verbose_name="Курс")
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="lessons",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        verbose_name="Владелец",
+    )
 
     def __str__(self) -> str:
         """

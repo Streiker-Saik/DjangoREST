@@ -36,7 +36,7 @@ class CourseSerializer(ModelSerializer):
     """
 
     count_lessons = SerializerMethodField()
-    lessons = LessonSerializer(many=True)
+    lessons = LessonSerializer(many=True, read_only=True)
 
     class Meta:
         model = Course

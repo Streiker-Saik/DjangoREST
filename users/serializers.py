@@ -51,11 +51,12 @@ class UserCreateSerializer(ModelSerializer):
         phone_number(str): Номер телефона пользователя
         city(str): Город пользователя.
     """
+
     password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'phone_number', 'city', 'password')
+        fields = ("id", "email", "phone_number", "city", "password")
 
     def create(self, validated_data):
         """Создает нового пользователя и хэширует его пароль."""
