@@ -85,7 +85,7 @@ poetry install
 ```
 или
 ```bash
-poetry add django python-dotenv psycopg2 pillow djangorestframework django-filter
+poetry add django python-dotenv psycopg2 pillow djangorestframework django-filter djangorestframework_simplejwt
 poetry add --group lint flake8 black isort mypy==1.16.0
 ```
 - Зайдите в файл .env.example и следуйте инструкция
