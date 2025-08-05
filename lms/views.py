@@ -46,7 +46,7 @@ class CourseViewSet(ModelViewSet):
         """Определяет права доступа для различных действий."""
         if self.action == "create":
             self.permission_classes = [IsAuthenticated, ~IsModerator]
-        elif self.action in ["retrieve", "update"]:
+        elif self.action in ["retrieve", "update", "partial_update"]:
             self.permission_classes = [IsAuthenticated, IsModerator | IsOwner]
         elif self.action == "destroy":
             self.permission_classes = [IsAuthenticated, ~IsModerator | IsOwner]
