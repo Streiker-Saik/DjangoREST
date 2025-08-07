@@ -12,6 +12,8 @@
   - [Models lms](#models-lms)
     - [Course](#course)
     - [Lesson](#lesson)
+    - [Subscription](#subscription)
+  - [Paginators lms](#paginators-lms)
   - [Serializers lms](#serializers-lms)
   - [Urls lms](#urls-lms)
   - [Validators lms](#validators-lms)
@@ -162,6 +164,7 @@ DjangoREST/
 |   ├── admin.py 
 |   ├── apps.py
 |   ├── models.py # модели БД
+|   ├── paginators.py # 
 |   ├── seriazers.py # сериализаторы приложения
 |   ├── tests.py 
 |   ├── urls.py # маршрутизация приложения
@@ -224,6 +227,13 @@ DjangoREST/
 - Атрибуты:
   - user(ForeignKey): Пользователь (внешний ключ на модель User(Пользователь))
   - course(ForeignKey): Курс (внешний ключ на модель Course(Курс))
+
+[<- на начало](#содержание)
+---
+## Paginators lms:
+### LmsPaginator:
+Пагинатор для приложения lms. 
+К-во элементов 3 (максимум 10) на странице
 
 [<- на начало](#содержание)
 
