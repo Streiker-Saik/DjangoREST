@@ -17,7 +17,7 @@ class LessonSerializer(ModelSerializer):
 
     class Meta:
         model = Lesson
-        fields = "__all__"
+        exclude = ['owner']
 
 
 class CourseSerializer(ModelSerializer):
@@ -36,11 +36,11 @@ class CourseSerializer(ModelSerializer):
     """
 
     count_lessons = SerializerMethodField()
-    lessons = LessonSerializer(many=True)
+    lessons = LessonSerializer(many=True, read_only=True)
 
     class Meta:
         model = Course
-        fields = "__all__"
+        exclude = ['owner']
 
     def get_count_lessons(self, obj) -> int:
         """
