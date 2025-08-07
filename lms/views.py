@@ -1,9 +1,13 @@
 from django.db.models import QuerySet
-from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, \
+    get_object_or_404
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.request import Request
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from lms.models import Course, Lesson
+from lms.models import Course, Lesson, Subscription
 from lms.serializers import CourseSerializer, LessonSerializer
 from users.permissions import IsModerator, IsOwner
 
@@ -14,7 +18,7 @@ class CourseViewSet(ModelViewSet):
     Позволяет выполнять операции с курсами:
         отображение списка, создание, отображение, полное обновление, частичное обновление, удаление.
     Методы:
-        get_queryset(self) -> QuerySet:
+        get_queryset(self) -> QuerySet: - временно отключена.
             Возвращает список уроков, к которым у пользователя есть доступ.
             Если пользователь является модератором, возвращает все уроки.
             В противном случае, возвращает только уроки, принадлежащие пользователю
@@ -28,19 +32,20 @@ class CourseViewSet(ModelViewSet):
     """
 
     serializer_class = CourseSerializer
+    queryset = Course.objects.all()
 
-    def get_queryset(self) -> QuerySet:
-        """
-        Возвращает список уроков, к которым у пользователя есть доступ.
-        Если пользователь является модератором, возвращает все уроки.
-        В противном случае, возвращает только уроки, принадлежащие пользователю.
-        """
-        user = self.request.user
-        if user.is_authenticated:
-            if user.groups.filter(name="Moderators").exists():
-                return Course.objects.all()
-            return Course.objects.filter(owner=user)
-        return Course.objects.none()
+    # def get_queryset(self) -> QuerySet:
+    #     """
+    #     Возвращает список уроков, к которым у пользователя есть доступ.
+    #     Если пользователь является модератором, возвращает все уроки.
+    #     В противном случае, возвращает только уроки, принадлежащие пользователю.
+    #     """
+    #     user = self.request.user
+    #     if user.is_authenticated:
+    #         if user.groups.filter(name="Moderators").exists():
+    #             return Course.objects.all()
+    #         return Course.objects.filter(owner=user)
+    #     return Course.objects.none()
 
     def get_permissions(self) -> list:
         """Определяет права доступа для различных действий."""
@@ -58,6 +63,31 @@ class CourseViewSet(ModelViewSet):
         new_course = serializer.save()
         new_course.owner = self.request.user
         new_course.save()
+
+
+class ManageSubscriptionAPIView(APIView):
+    """
+    Представление для создания/удаления подписки
+    Методы:
+        post(self, request: Request) -> Response:
+            Пост запрос на добавление или удаление подписки
+    """
+
+    def post(self, request: Request) -> Response:
+        """Пост запрос на добавление(если подписки нет) или удаление подписки(если есть)."""
+        user = request.user
+        course = request.data.get("course_id")
+        course_item = get_object_or_404(Course, id=course)
+
+        subs_item = Subscription.objects.filter(user=user, course=course_item)
+
+        if subs_item.exists():
+            subs_item.delete()
+            message = "подписка удалена"
+        else:
+            Subscription.objects.create(user=user, course=course_item)
+            message = "подписка добавлена"
+        return Response({"message": message})
 
 
 class LessonCreateAPIView(CreateAPIView):

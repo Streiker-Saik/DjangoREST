@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from lms.models import Course, Lesson
+from lms.models import Course, Lesson, Subscription
 from lms.validators import DescriptionValidator, UrlValidator
 
 
@@ -35,13 +35,17 @@ class CourseSerializer(serializers.ModelSerializer):
         title(str): Название курса.
         preview(ImageField): Превью курса.
         description(str): Описание курса.
+        is_subscribed(bool): Если подписка у пользователя
     Методы:
         get_count_lessons(self, obj) -> int:
             Получение количества уроков в курсе
+        get_is_subscribed(self, obj) -> bool:
+            Есть ли подписка у пользователя
     """
 
     count_lessons = serializers.SerializerMethodField()
     lessons = LessonSerializer(many=True, read_only=True)
+    is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
         model = Course
@@ -56,3 +60,12 @@ class CourseSerializer(serializers.ModelSerializer):
         """
         count_lessons = obj.lessons.count()
         return count_lessons if count_lessons else 0
+
+    def get_is_subscribed(self, obj) -> bool:
+        """
+        Есть ли подписка у пользователя
+        :param obj: Экземпляр курса
+        :return: True если есть, иначе False
+        """
+        user = self.context['request'].user
+        return Subscription.objects.filter(user=user, course=obj).exists()
