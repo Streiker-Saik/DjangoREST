@@ -14,6 +14,7 @@
     - [Lesson](#lesson)
   - [Serializers lms](#serializers-lms)
   - [Urls lms](#urls-lms)
+  - [Validators lms](#validators-lms)
   - [Views lms](#views-lms)
 - [Приложение users](#приложение-users)
   - [Admin users](#admin-users)
@@ -164,6 +165,7 @@ DjangoREST/
 |   ├── seriazers.py # сериализаторы приложения
 |   ├── tests.py 
 |   ├── urls.py # маршрутизация приложения
+|   ├── validators # валидаторы сериализаторов
 |   └── views.py # конструктор контроллеров
 ├── users/ # приложение аутефикации
 |   ├── management/
@@ -265,6 +267,17 @@ DjangoREST/
 - Удаление урока (доступны методы: **DELETE**)
   http://127.0.0.1:8000/courses/lessons/(pk)/delete/
   - где (pk) - это, целое число PrimaryKey, ID урока
+
+[<- на начало](#содержание)
+
+---
+## Validators lms:
+### DescriptionValidator
+Валидатор проверки описания на наличие ссылок.
+Проверяет значение на наличие ссылок кроме YouTube.
+### UrlValidator
+Валидатор url ссылки.
+Проверяет значение на соответствие формату ссылки видео на YouTube.
 
 [<- на начало](#содержание)
 

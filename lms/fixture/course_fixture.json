@@ -5,7 +5,8 @@
     "fields": {
         "title": "Python-разработчик",
         "preview": "",
-        "description": null
+        "description": null,
+        "owner": 2
     }
 },
 {
@@ -14,7 +15,8 @@
     "fields": {
         "title": "Java-разработчик",
         "preview": "",
-        "description": null
+        "description": null,
+        "owner": null
     }
 }
 ]

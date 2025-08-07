@@ -1,9 +1,10 @@
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from rest_framework import serializers
 
 from lms.models import Course, Lesson
+from lms.validators import DescriptionValidator, UrlValidator
 
 
-class LessonSerializer(ModelSerializer):
+class LessonSerializer(serializers.ModelSerializer):
     """
     Сериализатор для модели Lesson
     Отображаются поля:
@@ -18,9 +19,13 @@ class LessonSerializer(ModelSerializer):
     class Meta:
         model = Lesson
         exclude = ['owner']
+        validators = [
+            DescriptionValidator(field="description"),
+            UrlValidator(field="video_url")
+        ]
 
 
-class CourseSerializer(ModelSerializer):
+class CourseSerializer(serializers.ModelSerializer):
     """
     Сериализатор для модели Course
     Отображаются поля:
@@ -35,12 +40,13 @@ class CourseSerializer(ModelSerializer):
             Получение количества уроков в курсе
     """
 
-    count_lessons = SerializerMethodField()
+    count_lessons = serializers.SerializerMethodField()
     lessons = LessonSerializer(many=True, read_only=True)
 
     class Meta:
         model = Course
         exclude = ['owner']
+        validators = [DescriptionValidator(field="description")]
 
     def get_count_lessons(self, obj) -> int:
         """
