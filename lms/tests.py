@@ -123,7 +123,7 @@ class LmsLessonTestCase(APITestCase):
         )
 
     def test_create_lesson_invalid_description(self):
-        """Тестирование создание урока,"""
+        """Тестирование создание урока, со сторонней ссылкой в описании"""
         data = {
             "title": "2.1 Типы данных",
             "description": "Здесь учат http://sky.pro/",
@@ -138,7 +138,23 @@ class LmsLessonTestCase(APITestCase):
             response.data.get("non_field_errors"),
         )
 
-    def test_update(self):
+    def test_create_lesson_invalid_url(self):
+        """Тестирование создание урока, со сторонней ссылкой"""
+        data = {
+            "title": "2.1 Типы данных",
+            "video_url": "http://sky.pro/",
+            "courses": self.course.pk,
+            "owner": self.user.pk,
+        }
+        response = self.client.post("/courses/lessons/create/", data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn(
+            "Можно прикреплять только ссылки видео на YouTube",
+            response.data.get("non_field_errors"),
+        )
+
+    def test_update_lesson(self):
         """Тестирование обновления урока"""
         data = {"title": "Изменили", "description": "Изменили", "courses": self.course.pk}
         response = self.client.put(f"/courses/lessons/{self.lesson.pk}/update/", data=data)
@@ -157,7 +173,7 @@ class LmsLessonTestCase(APITestCase):
             },
         )
 
-    def test_partial_update(self):
+    def test_partial_update_lesson(self):
         """Тестирование частичного обновления урока"""
         data = {"description": "Изменили"}
         response = self.client.patch(f"/courses/lessons/{self.lesson.pk}/update/", data=data)
@@ -244,4 +260,87 @@ class LmsCourseTestCase(APITestCase):
                 "description": None,
             },
         )
-L
+
+    def test_update_course(self):
+        """Тестирование обновления курса"""
+        data = {"title": "Изменили", "description": "Изменили", "courses": self.course.pk}
+        response = self.client.put(f"/courses/{self.course.pk}/", data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(
+            response.json(),
+            {
+                "id": self.course.pk,
+                "count_lessons": 0,
+                "lessons": [],
+                "is_subscribed": False,
+                "title": "Изменили",
+                "preview": None,
+                "description": "Изменили",
+            },
+        )
+
+    def test_partial_update_course(self):
+        """Тестирование частичного обновления курса"""
+        data = {"description": "Изменили"}
+        response = self.client.patch(f"/courses/{self.course.pk}/", data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(
+            response.json(),
+            {
+                "id": self.course.pk,
+                "count_lessons": 0,
+                "lessons": [],
+                "is_subscribed": False,
+                "title": "Python-разработчик",
+                "preview": None,
+                "description": "Изменили",
+            },
+        )
+
+    def test_destroy_course(self):
+        """Тестирование удаление курса"""
+
+        response = self.client.delete(f"/courses/{self.course.pk}/")
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        self.assertFalse(Course.objects.all().exists())
+
+
+class LmsSubscriptionTestCase(APITestCase):
+    """"""
+
+    def setUp(self):
+        self.user = User.objects.create(email="test@test.com")
+        self.client.force_authenticate(user=self.user)
+        self.course = Course.objects.create(title="Python-разработчик", owner=self.user)
+
+    def test_create_subscription(self):
+        """Тестирование создание подписки"""
+        data = {"course_id": self.course.id}
+        response = self.client.post("/courses/manger_subscribe/", data=data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn(
+            "подписка добавлена",
+            response.data.get("message"),
+        )
+        self.assertTrue(Subscription.objects.all().exists())
+
+    def test_delete_subscription(self):
+        """Тестирование удаление подписки"""
+        data = {"course_id": self.course.id}
+        Subscription.objects.create(course=self.course, user=self.user)
+        response = self.client.post("/courses/manger_subscribe/", data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn(
+            "подписка удалена",
+            response.data.get("message"),
+        )
+        self.assertFalse(Subscription.objects.all().exists())
+
+
