@@ -75,6 +75,8 @@ class ManageSubscriptionAPIView(APIView):
             Пост запрос на добавление или удаление подписки
     """
 
+    permission_classes = (IsAuthenticated,)
+
     def post(self, request: Request) -> Response:
         """Пост запрос на добавление(если подписки нет) или удаление подписки(если есть)."""
         user = request.user

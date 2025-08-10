@@ -324,10 +324,7 @@ class LmsSubscriptionTestCase(APITestCase):
         data = {"course_id": self.course.id}
         response = self.client.post("/courses/manger_subscribe/", data=data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn(
-            "подписка добавлена",
-            response.data.get("message"),
-        )
+        self.assertIn("подписка добавлена", response.data.get("message"))
         self.assertTrue(Subscription.objects.all().exists())
 
     def test_delete_subscription(self):
@@ -337,10 +334,14 @@ class LmsSubscriptionTestCase(APITestCase):
         response = self.client.post("/courses/manger_subscribe/", data=data)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn(
-            "подписка удалена",
-            response.data.get("message"),
-        )
+        self.assertIn("подписка удалена", response.data.get("message"))
         self.assertFalse(Subscription.objects.all().exists())
 
-
+    def test_not_authenticated(self):
+        """Тестирование доступа к эндпоинту не авторизованного пользователя"""
+        self.client.force_authenticate(user=None)
+        data = {"course_id": self.course.id}
+        response = self.client.post("/courses/manger_subscribe/", data=data)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.json(), {"detail": "Authentication credentials were not provided."})
+        self.assertFalse(Subscription.objects.all().exists())
