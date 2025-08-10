@@ -22,7 +22,7 @@ class DescriptionValidator:
         """
         pattern_url = re.compile(r"https?://[^\s]+")
         pattern_url_youtube = re.compile(r"https?://(www\.)?youtube\.com/.*")
-        tmp_value =dict(value).get(self.field)
+        tmp_value = dict(value).get(self.field)
         if not tmp_value:
             return
         all_url = pattern_url.findall(tmp_value)
@@ -48,7 +48,7 @@ class UrlValidator:
         :raise ValidationError: Если ссылки не соответствуют формату видео ссылки YouTube.
         """
         pattern = re.compile(r"https?://(www\.)?youtube\.com/watch\?v=.*")
-        tmp_value =dict(value).get(self.field)
+        tmp_value = dict(value).get(self.field)
         if tmp_value is None:
             return
         if not bool(re.fullmatch(pattern, tmp_value)):

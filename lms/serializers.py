@@ -18,11 +18,8 @@ class LessonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
-        exclude = ['owner']
-        validators = [
-            DescriptionValidator(field="description"),
-            UrlValidator(field="video_url")
-        ]
+        exclude = ["owner"]
+        validators = [DescriptionValidator(field="description"), UrlValidator(field="video_url")]
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -49,7 +46,7 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        exclude = ['owner']
+        exclude = ["owner"]
         validators = [DescriptionValidator(field="description")]
 
     def get_count_lessons(self, obj) -> int:
@@ -67,5 +64,5 @@ class CourseSerializer(serializers.ModelSerializer):
         :param obj: Экземпляр курса
         :return: True если есть, иначе False
         """
-        user = self.context['request'].user
+        user = self.context["request"].user
         return Subscription.objects.filter(user=user, course=obj).exists()

@@ -82,11 +82,9 @@ class Subscription(models.Model):
         user(ForeignKey): Пользователь (внешний ключ на модель User(Пользователь))
         course(ForeignKey): Курс (внешний ключ на модель Course(Курс))
     """
+
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        related_name="subscriptions",
-        on_delete=models.CASCADE,
-        verbose_name="Пользователь"
+        settings.AUTH_USER_MODEL, related_name="subscriptions", on_delete=models.CASCADE, verbose_name="Пользователь"
     )
     course = models.ForeignKey(Course, related_name="subscriptions", on_delete=models.CASCADE, verbose_name="Курс")
 

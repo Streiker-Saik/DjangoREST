@@ -2,11 +2,11 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 
 from users.models import Payment, User
 from users.permissions import IsProfileOwner
-from users.serializers import PaymentSerializer, UserCreateSerializer, UserSerializer, UserGeneralSerializer
+from users.serializers import PaymentSerializer, UserCreateSerializer, UserGeneralSerializer, UserSerializer
 
 
 class UserListAPIView(ListAPIView):
@@ -66,7 +66,7 @@ class UserRetrieveAPIView(RetrieveAPIView):
         Возвращает UserSerializer для администраторов и владельца, а UserGeneralSerializer для обычных пользователей.
         """
         user = self.request.user
-        pk = self.kwargs['pk']
+        pk = self.kwargs["pk"]
         user_profile = get_object_or_404(User, pk=pk)
         if user == user_profile or user.is_staff:
             return UserSerializer
