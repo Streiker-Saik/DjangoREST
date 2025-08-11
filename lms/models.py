@@ -27,7 +27,7 @@ class Course(models.Model):
 
     def __str__(self) -> str:
         """
-        Строковое представление рассылки
+        Строковое представление курса
         :return: Название курса
         """
         return f"{self.title}"
@@ -65,7 +65,7 @@ class Lesson(models.Model):
 
     def __str__(self) -> str:
         """
-        Строковое представление рассылки
+        Строковое представление урока
         :return: Название урока
         """
         return f"{self.title}"
@@ -73,3 +73,28 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = "урок"
         verbose_name_plural = "уроки"
+
+
+class Subscription(models.Model):
+    """
+    Представление подписки
+    Атрибуты:
+        user(ForeignKey): Пользователь (внешний ключ на модель User(Пользователь))
+        course(ForeignKey): Курс (внешний ключ на модель Course(Курс))
+    """
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name="subscriptions", on_delete=models.CASCADE, verbose_name="Пользователь"
+    )
+    course = models.ForeignKey(Course, related_name="subscriptions", on_delete=models.CASCADE, verbose_name="Курс")
+
+    def __str__(self) -> str:
+        """
+        Строковое представление подписки
+        :return: пользователь: ... - курс ...
+        """
+        return f"пользователь: {self.user} - курс {self.course}"
+
+    class Meta:
+        verbose_name = "подписка"
+        verbose_name_plural = "подписки"

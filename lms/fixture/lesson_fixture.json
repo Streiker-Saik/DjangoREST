@@ -7,7 +7,8 @@
         "description": null,
         "preview": "",
         "video_url": null,
-        "courses": 1
+        "courses": 1,
+        "owner": 2
     }
 },
 {
@@ -18,10 +19,11 @@
         "description": null,
         "preview": "",
         "video_url": null,
-        "courses": 1
+        "courses": 1,
+        "owner": 2
     }
 },
-    {
+{
     "model": "lms.lesson",
     "pk": 3,
     "fields": {
@@ -29,7 +31,8 @@
         "description": null,
         "preview": "",
         "video_url": null,
-        "courses": 2
+        "courses": 2,
+        "owner": null
     }
 }
 ]
