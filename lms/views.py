@@ -103,6 +103,26 @@ class ManageSubscriptionAPIView(APIView):
 
     permission_classes = (IsAuthenticated,)
 
+    @swagger_auto_schema(
+        operation_id="manager_subscribe",
+        manual_parameters=[],
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'course_id': openapi.Schema(type=openapi.TYPE_INTEGER, description="ID курса для подписки"),
+            },
+            required=['course_id'],
+        ),
+        responses={
+            200: openapi.Response('', openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'message': openapi.Schema(type=openapi.TYPE_STRING, description="Сообщение о результате операции"),
+                },
+            )),
+            404: 'Курс не найден',
+        }
+    )
     def post(self, request: Request) -> Response:
         """Пост запрос на добавление(если подписки нет) или удаление подписки(если есть)."""
         user = request.user
@@ -137,6 +157,10 @@ class LessonCreateAPIView(CreateAPIView):
         new_lesson.owner = self.request.user
         new_lesson.save()
 
+    @swagger_auto_schema(operation_id="lessons_create")
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
 
 class LessonListAPIView(ListAPIView):
     """
@@ -152,6 +176,10 @@ class LessonListAPIView(ListAPIView):
     # queryset = Lesson.objects.all().order_by('id')
     permission_classes = (IsAuthenticated,)
     pagination_class = LmsPaginator
+
+    @swagger_auto_schema(operation_id="lessons_list")
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
     def get_queryset(self) -> QuerySet:
         """
@@ -177,6 +205,10 @@ class LessonRetrieveAPIView(RetrieveAPIView):
         IsModerator | IsOwner,
     )
 
+    @swagger_auto_schema(operation_id="lessons_read")
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
 
 class LessonUpdateAPIView(UpdateAPIView):
     """Представление для обновления урока по идентификатору (PUT/PATH)"""
@@ -188,6 +220,19 @@ class LessonUpdateAPIView(UpdateAPIView):
         IsModerator | IsOwner,
     )
 
+    @swagger_auto_schema(
+        operation_description="Полное обновление урока",
+        operation_id="lessons_update"
+    )
+    def put(self, request, *args, **kwargs):
+        return super().put(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        operation_description="Частичное обновление урока",
+        operation_id="lessons_partial_update"
+    )
+    def patch(self, request, *args, **kwargs):
+        return super().patch(request, *args, **kwargs)
 
 class LessonDestroyAPIView(DestroyAPIView):
     """Представление для удаления урока по идентификатору (DELETE)"""
@@ -197,3 +242,7 @@ class LessonDestroyAPIView(DestroyAPIView):
         IsAuthenticated,
         ~IsModerator | IsOwner,
     )
+
+    @swagger_auto_schema(operation_id="lessons_delete")
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)
