@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
@@ -83,6 +84,20 @@ class UserUpdateAPIView(UpdateAPIView):
     queryset = User.objects.all()
     permission_classes = [IsAuthenticated, IsProfileOwner]
 
+    @swagger_auto_schema(
+        operation_description="Полное обновление пользователя",
+        operation_id="users_update"
+    )
+    def put(self, request, *args, **kwargs):
+        return super().put(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        operation_description="Частичное обновление пользователя",
+        operation_id="users_partial_update"
+    )
+    def patch(self, request, *args, **kwargs):
+        return super().patch(request, *args, **kwargs)
+
 
 class UserDestroyAPIView(DestroyAPIView):
     """Представление для удаления пользователя по идентификатору (DELETE)"""
@@ -90,6 +105,10 @@ class UserDestroyAPIView(DestroyAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     permission_classes = [IsAdminUser]
+
+    @swagger_auto_schema(operation_id="users_delete")
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)
 
 
 class PaymentListAPIView(ListAPIView):
