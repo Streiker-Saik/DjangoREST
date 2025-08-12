@@ -452,6 +452,12 @@ DjangoREST/
   - user(ForeignKey): Внешний ключ на пользователя.
   - course(ForeignKey): Внешний ключ на курс.
   - lesson(ForeignKey): Внешний ключ на урок.
+### TransactionStripe:
+- Показывает поля:
+  - id(int): Уникальный идентификатор транзакции
+  - payment(ForeignKey): Внешний ключ на платеж.
+  - strip_pay_id(str): Идентификатор транзакции.
+  - url_link(str): Ссылка на оплату.
 
 [<- на начало](#содержание)
 
