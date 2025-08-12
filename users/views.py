@@ -66,7 +66,9 @@ class UserRetrieveAPIView(RetrieveAPIView):
         Возвращает UserSerializer для администраторов и владельца, а UserGeneralSerializer для обычных пользователей.
         """
         user = self.request.user
-        pk = self.kwargs["pk"]
+        pk = self.kwargs.get("pk")
+        if pk is None:
+            return UserSerializer
         user_profile = get_object_or_404(User, pk=pk)
         if user == user_profile or user.is_staff:
             return UserSerializer
