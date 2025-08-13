@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from config import settings
 from lms.models import Course, Lesson
 
 
@@ -44,7 +43,7 @@ class Payment(models.Model):
     Представление платежа
     Атрибуты:
         user(ForeignKey): Пользователь (внешний ключ на модель «Пользователя»)
-        date_pay(datetime): Дата платежа
+        date_pay(datetime): Дата платежа(устанавливается на дату создания)
         course(ForeignKey): Курс (внешний ключ на модель «Курс»)
         lesson(ForeignKey): Урок (внешний ключ на модель «Урок»)
         amount(int): Сумма платежа
@@ -57,8 +56,8 @@ class Payment(models.Model):
         ("cash", "Наличные"),
         ("transfer", "Перевод на счет"),
     ]
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="payments", verbose_name="Пользователь")
-    date_pay = models.DateField(verbose_name="Дата оплаты")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="payments", verbose_name="Пользователь")
+    date_pay = models.DateField(auto_now_add=True, verbose_name="Дата оплаты")
     course = models.ForeignKey(
         Course, on_delete=models.SET_NULL, related_name="payments", blank=True, null=True, verbose_name="Курс"
     )

@@ -65,7 +65,7 @@ class CourseViewSet(ModelViewSet):
 
     @swagger_auto_schema(operation_description="Представление для полного обновления курса по идентификатору")
     def update(self, request, *args, **kwargs):
-        return super().update(*args, **kwargs)
+        return super().update(request,*args, **kwargs)
 
     @swagger_auto_schema(operation_description="Представление для частичного обновления курса по идентификатору")
     def partial_update(self, request, *args, **kwargs):
