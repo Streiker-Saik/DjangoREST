@@ -89,7 +89,9 @@ poetry install
 ```
 или
 ```bash
-poetry add django python-dotenv psycopg2 pillow djangorestframework django-filter djangorestframework_simplejwt coverage django-cors-headers stripe
+poetry add django python-dotenv psycopg2 pillow \
+djangorestframework django-filter djangorestframework_simplejwt \
+coverage django-cors-headers stripe
 poetry add --group lint flake8 black isort mypy==1.16.0
 ```
 - Зайдите в файл .env.example и следуйте инструкция
@@ -131,9 +133,10 @@ python manage.py csu --email ввести_адрес_почты --password вв�
 python manage.py add_test_data_lms
 ```
 ### add_test_data_users
-Команда для добавления тестовых данных(курсы, уроки) из fixture
+Команда для добавления тестовых данных(пользователи, платежи, транзакции) из fixture
 - 'users/fixture/user_fixture.json'
-- 'users/fixture/payment_fixture.json
+- 'users/fixture/payment_fixture.json'
+- 'users/fixture/transaction_fixture.json'
 ```bash
 python manage.py add_test_data_users
 ```
@@ -522,6 +525,9 @@ DjangoREST/
     где (pm) - это тип платежа cash|transfer
 - Создания платежа (доступны методы: **POST**)
   http://127.0.0.1:8000/users/payments/create/
+- Запрос статуса транзакции из Stripe:  
+  http://127.0.0.1:8000/users/payments/trans_strip/(transaction_id)/status/  
+  где (transaction_id) - это ID транзакции
 
 [<- на начало](#содержание)
 
@@ -571,6 +577,8 @@ DjangoREST/
 - Методы:
   - perform_create(self, serializer) -> None:  
   Сохраняет платеж и обрабатывает создание сессии Stripe.
+### TransactionStripeIsStatusAPIView:
+Представление получение статусов транзакции в Stripe
 
 [<- на начало](#содержание)
 

@@ -101,7 +101,7 @@ class ManageSubscriptionAPIView(APIView):
             Пост запрос на добавление или удаление подписки
     """
 
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
     @swagger_auto_schema(
         operation_id="manager_subscribe",
