@@ -1,7 +1,22 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from users.models import Payment, User
+from users.models import Payment, User, TransactionStripe
+
+
+class TransactionStripeSerializer(ModelSerializer):
+    """
+    Сериализатор для модели TransactionStripe.
+    Показывает поля:
+        id(int): Уникальный идентификатор транзакции
+        payment(ForeignKey): Внешний ключ на платеж.
+        strip_pay_id(str): Идентификатор транзакции.
+        url_link(str): Ссылка на оплату.
+    """
+
+    class Meta:
+        model = TransactionStripe
+        fields = "__all__"
 
 
 class PaymentSerializer(ModelSerializer):
@@ -15,11 +30,13 @@ class PaymentSerializer(ModelSerializer):
         user(ForeignKey): Внешний ключ на пользователя.
         course(ForeignKey): Внешний ключ на курс.
         lesson(ForeignKey): Внешний ключ на урок.
+        transaction_info(list): Список транзакций
     """
+    transaction_info = TransactionStripeSerializer(many=True, read_only=True, source='transactions')
 
     class Meta:
         model = Payment
-        fields = "__all__"
+        fields = ('course', 'lesson', 'amount', 'payment_method', 'transaction_info')
 
 
 class UserSerializer(ModelSerializer):
@@ -78,18 +95,3 @@ class UserCreateSerializer(ModelSerializer):
         user.set_password(validated_data.pop("password"))
         user.save()
         return user
-
-
-class TransactionStripeSerializer(ModelSerializer):
-    """
-    Сериализатор для модели TransactionStripe.
-    Показывает поля:
-        id(int): Уникальный идентификатор транзакции
-        payment(ForeignKey): Внешний ключ на платеж.
-        strip_pay_id(str): Идентификатор транзакции.
-        url_link(str): Ссылка на оплату.
-    """
-
-    class Meta:
-        model = User
-        fields = "__all__"
