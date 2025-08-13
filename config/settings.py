@@ -146,3 +146,5 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.User"
+
+STRIPE_API_KEY = os.getenv("STRIPE_API_KEY")

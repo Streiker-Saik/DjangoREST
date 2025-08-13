@@ -24,6 +24,7 @@
     - [User](#user)
   - [Permissions users](#permissions-users)
   - [Serializers user](#serializers-users)
+  - [Services user](#services-users)
   - [Urls user](#urls-users)
   - [Views user](#views-users)
 
@@ -187,6 +188,7 @@ DjangoREST/
 |   ├── models.py # модели БД
 |   ├── permissions.py # правв доступа
 |   ├── seriazers.py # сериализаторы приложения
+|   ├── services.py # сервисные функции 
 |   ├── tests.py 
 |   ├── urls.py # маршрутизация приложения
 |   └── views.py # конструктор контроллеров
@@ -459,6 +461,30 @@ DjangoREST/
   - payment(ForeignKey): Внешний ключ на платеж.
   - strip_pay_id(str): Идентификатор транзакции.
   - url_link(str): Ссылка на оплату.
+
+[<- на начало](#содержание)
+
+---
+## Services users:
+### TransactionStripeService:
+Сервис работы с Strip транзакциями
+- Методы:
+  - get_strip_product(product_name: str) -> dict:  
+  Получение продукта из Strip
+  - create_strip_course(product_name: str) -> dict:  
+  Создание продукта в Strip
+  - search_strip_product(product_name: str) -> Optional[dict]:  
+  Поиск продукта по названию в Strip
+  - get_strip_price(amount: int, product_id: str) -> dict:  
+  Получение цены из Strip
+  - create_strip_price(amount: int, product_id: str) -> dict:  
+  Создание цены в Strip
+  - search_strip_price(product_id: str) -> Optional[dict]:  
+  Поиск продукта по названию в Strip
+  - create_strip_session(price: dict) -> tuple:  
+  Создание сессии в Strip
+  - check_status(transaction: dict) -> str:  
+  Проверка статуса платежа в Strip
 
 [<- на начало](#содержание)
 
