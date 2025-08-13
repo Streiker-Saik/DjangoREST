@@ -1,9 +1,11 @@
 from typing import Optional
 
 import stripe
+
 from config.settings import STRIPE_API_KEY
 
 stripe.api_key = STRIPE_API_KEY
+
 
 class TransactionStripeService:
     """
@@ -90,5 +92,3 @@ class TransactionStripeService:
         """Получение данных о сессии в Strip"""
         session = stripe.checkout.Session.retrieve(strip_pay_id)
         return session
-
-

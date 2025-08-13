@@ -65,7 +65,7 @@ class CourseViewSet(ModelViewSet):
 
     @swagger_auto_schema(operation_description="Представление для полного обновления курса по идентификатору")
     def update(self, request, *args, **kwargs):
-        return super().update(request,*args, **kwargs)
+        return super().update(request, *args, **kwargs)
 
     @swagger_auto_schema(operation_description="Представление для частичного обновления курса по идентификатору")
     def partial_update(self, request, *args, **kwargs):
@@ -109,19 +109,24 @@ class ManageSubscriptionAPIView(APIView):
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                'course_id': openapi.Schema(type=openapi.TYPE_INTEGER, description="ID курса для подписки"),
+                "course_id": openapi.Schema(type=openapi.TYPE_INTEGER, description="ID курса для подписки"),
             },
-            required=['course_id'],
+            required=["course_id"],
         ),
         responses={
-            200: openapi.Response('', openapi.Schema(
-                type=openapi.TYPE_OBJECT,
-                properties={
-                    'message': openapi.Schema(type=openapi.TYPE_STRING, description="Сообщение о результате операции"),
-                },
-            )),
-            404: 'Курс не найден',
-        }
+            200: openapi.Response(
+                "",
+                openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        "message": openapi.Schema(
+                            type=openapi.TYPE_STRING, description="Сообщение о результате операции"
+                        ),
+                    },
+                ),
+            ),
+            404: "Курс не найден",
+        },
     )
     def post(self, request: Request) -> Response:
         """Пост запрос на добавление(если подписки нет) или удаление подписки(если есть)."""
@@ -220,19 +225,14 @@ class LessonUpdateAPIView(UpdateAPIView):
         IsModerator | IsOwner,
     )
 
-    @swagger_auto_schema(
-        operation_description="Полное обновление урока",
-        operation_id="lessons_update"
-    )
+    @swagger_auto_schema(operation_description="Полное обновление урока", operation_id="lessons_update")
     def put(self, request, *args, **kwargs):
         return super().put(request, *args, **kwargs)
 
-    @swagger_auto_schema(
-        operation_description="Частичное обновление урока",
-        operation_id="lessons_partial_update"
-    )
+    @swagger_auto_schema(operation_description="Частичное обновление урока", operation_id="lessons_partial_update")
     def patch(self, request, *args, **kwargs):
         return super().patch(request, *args, **kwargs)
+
 
 class LessonDestroyAPIView(DestroyAPIView):
     """Представление для удаления урока по идентификатору (DELETE)"""

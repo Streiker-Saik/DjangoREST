@@ -56,7 +56,9 @@ class Payment(models.Model):
         ("cash", "Наличные"),
         ("transfer", "Перевод на счет"),
     ]
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="payments", verbose_name="Пользователь")
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, blank=True, null=True, related_name="payments", verbose_name="Пользователь"
+    )
     date_pay = models.DateField(auto_now_add=True, verbose_name="Дата оплаты")
     course = models.ForeignKey(
         Course, on_delete=models.SET_NULL, related_name="payments", blank=True, null=True, verbose_name="Курс"
@@ -87,13 +89,9 @@ class TransactionStripe(models.Model):
         strip_pay_id(str): Идентификатор транзакции
         url_link(str): Ссылка на оплату
     """
+
     payment = models.ForeignKey(
-        Payment,
-        related_name="transactions",
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-        verbose_name="Платеж"
+        Payment, related_name="transactions", on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Платеж"
     )
     strip_pay_id = models.CharField(max_length=255, blank=True, null=True, verbose_name="Id сессии")
     url_link = models.URLField(max_length=400, blank=True, null=True, verbose_name="Ссылка на оплату")

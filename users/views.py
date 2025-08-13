@@ -9,10 +9,10 @@ from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from users.models import Payment, User, TransactionStripe
+from users.models import Payment, TransactionStripe, User
 from users.permissions import IsProfileOwner
-from users.serializers import PaymentSerializer, UserCreateSerializer, UserGeneralSerializer, UserSerializer, \
-    TransactionStripeSerializer
+from users.serializers import (PaymentSerializer, TransactionStripeSerializer, UserCreateSerializer,
+                               UserGeneralSerializer, UserSerializer)
 from users.services import TransactionStripeService
 
 
@@ -90,16 +90,12 @@ class UserUpdateAPIView(UpdateAPIView):
     queryset = User.objects.all()
     permission_classes = [IsAuthenticated, IsProfileOwner]
 
-    @swagger_auto_schema(
-        operation_description="Полное обновление пользователя",
-        operation_id="users_update"
-    )
+    @swagger_auto_schema(operation_description="Полное обновление пользователя", operation_id="users_update")
     def put(self, request, *args, **kwargs):
         return super().put(request, *args, **kwargs)
 
     @swagger_auto_schema(
-        operation_description="Частичное обновление пользователя",
-        operation_id="users_partial_update"
+        operation_description="Частичное обновление пользователя", operation_id="users_partial_update"
     )
     def patch(self, request, *args, **kwargs):
         return super().patch(request, *args, **kwargs)
@@ -158,7 +154,7 @@ class PaymentCreateAPIView(CreateAPIView):
             price = TransactionStripeService.get_strip_price(amount=amount, product_id=product.get("id"))
             strip_pay_id, url_link = TransactionStripeService.create_strip_session(price)
 
-            transaction_data = {"payment": payment.pk, "strip_pay_id": strip_pay_id,"url_link": url_link}
+            transaction_data = {"payment": payment.pk, "strip_pay_id": strip_pay_id, "url_link": url_link}
             transaction = TransactionStripeSerializer(data=transaction_data)
             transaction.is_valid(raise_exception=True)
             transaction.save()
@@ -174,27 +170,29 @@ class TransactionStripeIsStatusAPIView(APIView):
     @swagger_auto_schema(
         operation_id="get_transaction_status",
         manual_parameters=[
-            openapi.Parameter('transaction_id', openapi.IN_PATH, description="ID транзакции",
-                              type=openapi.TYPE_INTEGER)
+            openapi.Parameter(
+                "transaction_id", openapi.IN_PATH, description="ID транзакции", type=openapi.TYPE_INTEGER
+            )
         ],
         responses={
-            200: openapi.Response('', openapi.Schema(
-                type=openapi.TYPE_OBJECT,
-                properties={
-                    'payment_status': openapi.Schema(
-                        type=openapi.TYPE_STRING,
-                        enum=["no_payment_required", "paid", "unpaid"],
-                        description="Статус платежа"
-                    ),
-                    'status': openapi.Schema(
-                        type=openapi.TYPE_STRING,
-                        enum=["complete", "expired", "open"],
-                        description="Статус сеанса"
-                    ),
-                },
-            )),
-            404: 'Транзакция не найдена',
-        }
+            200: openapi.Response(
+                "",
+                openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        "payment_status": openapi.Schema(
+                            type=openapi.TYPE_STRING,
+                            enum=["no_payment_required", "paid", "unpaid"],
+                            description="Статус платежа",
+                        ),
+                        "status": openapi.Schema(
+                            type=openapi.TYPE_STRING, enum=["complete", "expired", "open"], description="Статус сеанса"
+                        ),
+                    },
+                ),
+            ),
+            404: "Транзакция не найдена",
+        },
     )
     def get(self, request, transaction_id):
         """Получение статуса транзакции по transaction_id"""
@@ -202,9 +200,6 @@ class TransactionStripeIsStatusAPIView(APIView):
         transaction_strip = TransactionStripeService.retrieve_strip_session(transaction_item.strip_pay_id)
 
         return Response(
-            {
-                "payment_status": transaction_strip.get("payment_status"),
-                "status": transaction_strip.get("status")
-            },
-            status=status.HTTP_200_OK
+            {"payment_status": transaction_strip.get("payment_status"), "status": transaction_strip.get("status")},
+            status=status.HTTP_200_OK,
         )

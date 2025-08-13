@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from users.models import Payment, User, TransactionStripe
+from users.models import Payment, TransactionStripe, User
 
 
 class TransactionStripeSerializer(ModelSerializer):
@@ -32,11 +32,12 @@ class PaymentSerializer(ModelSerializer):
         lesson(ForeignKey): Внешний ключ на урок.
         transaction_info(list): Список транзакций
     """
-    transaction_info = TransactionStripeSerializer(many=True, read_only=True, source='transactions')
+
+    transaction_info = TransactionStripeSerializer(many=True, read_only=True, source="transactions")
 
     class Meta:
         model = Payment
-        fields = ('course', 'lesson', 'amount', 'payment_method', 'transaction_info')
+        fields = ("course", "lesson", "amount", "payment_method", "transaction_info")
 
 
 class UserSerializer(ModelSerializer):
