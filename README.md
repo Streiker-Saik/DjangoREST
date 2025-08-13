@@ -520,6 +520,8 @@ DjangoREST/
     где (pk) - это, целое число PrimaryKey, ID урока
     - http://127.0.0.1:8000/users/payments/?payment_method=(pm) # по типу платежа  
     где (pm) - это тип платежа cash|transfer
+- Создания платежа (доступны методы: **POST**)
+  http://127.0.0.1:8000/users/payments/create/
 
 [<- на начало](#содержание)
 
@@ -564,6 +566,11 @@ DjangoREST/
 Фильтрация: курсу(course), уроку(lesson), методу платежа(payment_method)
 - Доступ:
   - сотрудник
+### PaymentCreateAPIView:
+Представление для создания платежа (POST)
+- Методы:
+  - perform_create(self, serializer) -> None:  
+  Сохраняет платеж и обрабатывает создание сессии Stripe.
 
 [<- на начало](#содержание)
 

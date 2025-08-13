@@ -5,9 +5,11 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 
-from users.models import Payment, User
+from users.models import Payment, User, TransactionStripe
 from users.permissions import IsProfileOwner
-from users.serializers import PaymentSerializer, UserCreateSerializer, UserGeneralSerializer, UserSerializer
+from users.serializers import PaymentSerializer, UserCreateSerializer, UserGeneralSerializer, UserSerializer, \
+    TransactionStripeSerializer
+from users.services import TransactionStripeService
 
 
 class UserListAPIView(ListAPIView):
@@ -120,7 +122,7 @@ class PaymentListAPIView(ListAPIView):
 
     serializer_class = PaymentSerializer
     queryset = Payment.objects.all()
-    permission_classes = [IsAdminUser]
+    # permission_classes = [IsAdminUser]
     filter_backends = [OrderingFilter, DjangoFilterBackend]
     ordering_fields = ("date_pay",)
     filterset_fields = (
@@ -128,3 +130,32 @@ class PaymentListAPIView(ListAPIView):
         "lesson",
         "payment_method",
     )
+
+
+class PaymentCreateAPIView(CreateAPIView):
+    """
+    Представление для создания платежа (POST)
+    Методы:
+        perform_create(self, serializer) -> None:
+            Сохраняет платеж и обрабатывает создание сессии Stripe.
+    """
+
+    serializer_class = PaymentSerializer
+    queryset = Payment.objects.all()
+
+    def perform_create(self, serializer) -> None:
+        """Сохраняет платеж и обрабатывает создание сессии Stripe."""
+        payment = serializer.save(user=self.request.user)
+
+        if payment.payment_method == "transfer":
+            course_name = payment.course.title
+            amount = payment.amount
+            product = TransactionStripeService.get_strip_product(product_name=course_name)
+            price = TransactionStripeService.get_strip_price(amount=amount, product_id=product.get("id"))
+            strip_pay_id, url_link = TransactionStripeService.create_strip_session(price)
+
+            transaction_data = {"payment": payment.id, "strip_pay_id": strip_pay_id,"url_link": url_link}
+            transaction = TransactionStripeSerializer(data=transaction_data)
+            transaction.is_valid(raise_exception=True)
+            transaction.save()
+
