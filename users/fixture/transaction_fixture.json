@@ -1,0 +1,11 @@
+[
+{
+    "model": "users.transactionstripe",
+    "pk": 1,
+    "fields": {
+        "payment": 1,
+        "strip_pay_id": "cs_test_a1Cwkg0yZN5DQ53IfWNX6SzUdpi3QWNplHTBII2EaACnarTReNHzg1460m",
+        "url_link": "https://checkout.stripe.com/c/pay/cs_test_a1Cwkg0yZN5DQ53IfWNX6SzUdpi3QWNplHTBII2EaACnarTReNHzg1460m#fidkdWxOYHwnPyd1blpxYHZxWjA0V3BwdVxGbWJ0M2lkc3VPUl1cazdgMEtzfHRzZG1TRG1CZm1UQ09fN3M8RmFKZGh9XW5LPGhKSDY1T10waVV8PT1ucXBqUTNKZk8yNWljTE5sXTJ8R3ZINTVtPUY9VDM2TycpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl"
+    }
+}
+]

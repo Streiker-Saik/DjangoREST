@@ -20,7 +20,7 @@
       "course": 2,
       "lesson": 3,
       "amount": 1000,
-      "payment_method": "transfer"
+      "payment_method": "cash"
     }
   }
 ]

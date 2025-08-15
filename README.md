@@ -24,13 +24,14 @@
     - [User](#user)
   - [Permissions users](#permissions-users)
   - [Serializers user](#serializers-users)
+  - [Services user](#services-users)
   - [Urls user](#urls-users)
   - [Views user](#views-users)
 
 
 ## Описание:
 
-Разработка приложения(веб-сайта) онлайн магазина и блога, с помощью фреймворка Django.
+Разработка API, с помощью фреймворка Django.
 
 [<- на начало](#содержание)
 
@@ -88,7 +89,9 @@ poetry install
 ```
 или
 ```bash
-poetry add django python-dotenv psycopg2 pillow djangorestframework django-filter djangorestframework_simplejwt
+poetry add django python-dotenv psycopg2 pillow \
+djangorestframework django-filter djangorestframework_simplejwt \
+coverage django-cors-headers stripe
 poetry add --group lint flake8 black isort mypy==1.16.0
 ```
 - Зайдите в файл .env.example и следуйте инструкция
@@ -130,9 +133,10 @@ python manage.py csu --email ввести_адрес_почты --password вв�
 python manage.py add_test_data_lms
 ```
 ### add_test_data_users
-Команда для добавления тестовых данных(курсы, уроки) из fixture
+Команда для добавления тестовых данных(пользователи, платежи, транзакции) из fixture
 - 'users/fixture/user_fixture.json'
-- 'users/fixture/payment_fixture.json
+- 'users/fixture/payment_fixture.json'
+- 'users/fixture/transaction_fixture.json'
 ```bash
 python manage.py add_test_data_users
 ```
@@ -187,6 +191,7 @@ DjangoREST/
 |   ├── models.py # модели БД
 |   ├── permissions.py # правв доступа
 |   ├── seriazers.py # сериализаторы приложения
+|   ├── services.py # сервисные функции 
 |   ├── tests.py 
 |   ├── urls.py # маршрутизация приложения
 |   └── views.py # конструктор контроллеров
@@ -391,13 +396,19 @@ DjangoREST/
 Представление платежа.  
 - Атрибуты:
   - user(ForeignKey): Пользователь (внешний ключ на модель «Пользователя»)
-  - date_pay(datetime): Дата платежа
+  - date_pay(datetime): Дата платежа(устанавливается на дату создания)
   - course(ForeignKey): Курс (внешний ключ на модель «Курс»)
   - lesson(ForeignKey): Урок (внешний ключ на модель «Урок»)
   - amount(int): Сумма платежа
   - payment_method(str): Способ оплаты. Возможные значения:
     - cash - Наличные,
     - transfer - Перевод на счет
+### TransactionStripe:
+Представление транзакции через Strip
+- Атрибуты:
+  - payment(ForeignKey): Платеж (внешний ключ на модель «Платеж»)
+  - strip_pay_id(str): Идентификатор транзакции
+  - url_link(str): Ссылка на оплату
 
 [<- на начало](#содержание)
 
@@ -446,6 +457,37 @@ DjangoREST/
   - user(ForeignKey): Внешний ключ на пользователя.
   - course(ForeignKey): Внешний ключ на курс.
   - lesson(ForeignKey): Внешний ключ на урок.
+  - transaction_info(list): Список транзакций
+### TransactionStripe:
+- Показывает поля:
+  - id(int): Уникальный идентификатор транзакции
+  - payment(ForeignKey): Внешний ключ на платеж.
+  - strip_pay_id(str): Идентификатор транзакции.
+  - url_link(str): Ссылка на оплату.
+
+[<- на начало](#содержание)
+
+---
+## Services users:
+### TransactionStripeService:
+Сервис работы с Strip транзакциями
+- Методы:
+  - get_strip_product(product_name: str) -> dict:  
+  Получение продукта из Strip
+  - create_strip_course(product_name: str) -> dict:  
+  Создание продукта в Strip
+  - search_strip_product(product_name: str) -> Optional[dict]:  
+  Поиск продукта по названию в Strip
+  - get_strip_price(amount: int, product_id: str) -> dict:  
+  Получение цены из Strip
+  - create_strip_price(amount: int, product_id: str) -> dict:  
+  Создание цены в Strip
+  - search_strip_price(product_id: str) -> Optional[dict]:  
+  Поиск продукта по названию в Strip
+  - create_strip_session(price: dict) -> tuple:  
+  Создание сессии в Strip
+  - check_status(transaction: dict) -> str:  
+  Проверка статуса платежа в Strip
 
 [<- на начало](#содержание)
 
@@ -481,6 +523,11 @@ DjangoREST/
     где (pk) - это, целое число PrimaryKey, ID урока
     - http://127.0.0.1:8000/users/payments/?payment_method=(pm) # по типу платежа  
     где (pm) - это тип платежа cash|transfer
+- Создания платежа (доступны методы: **POST**)
+  http://127.0.0.1:8000/users/payments/create/
+- Запрос статуса транзакции из Stripe:  
+  http://127.0.0.1:8000/users/payments/trans_strip/(transaction_id)/status/  
+  где (transaction_id) - это ID транзакции
 
 [<- на начало](#содержание)
 
@@ -525,6 +572,13 @@ DjangoREST/
 Фильтрация: курсу(course), уроку(lesson), методу платежа(payment_method)
 - Доступ:
   - сотрудник
+### PaymentCreateAPIView:
+Представление для создания платежа (POST)
+- Методы:
+  - perform_create(self, serializer) -> None:  
+  Сохраняет платеж и обрабатывает создание сессии Stripe.
+### TransactionStripeIsStatusAPIView:
+Представление получение статусов транзакции в Stripe
 
 [<- на начало](#содержание)
 

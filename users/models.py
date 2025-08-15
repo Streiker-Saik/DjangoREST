@@ -43,7 +43,7 @@ class Payment(models.Model):
     Представление платежа
     Атрибуты:
         user(ForeignKey): Пользователь (внешний ключ на модель «Пользователя»)
-        date_pay(datetime): Дата платежа
+        date_pay(datetime): Дата платежа(устанавливается на дату создания)
         course(ForeignKey): Курс (внешний ключ на модель «Курс»)
         lesson(ForeignKey): Урок (внешний ключ на модель «Урок»)
         amount(int): Сумма платежа
@@ -56,8 +56,10 @@ class Payment(models.Model):
         ("cash", "Наличные"),
         ("transfer", "Перевод на счет"),
     ]
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="payments", verbose_name="Пользователь")
-    date_pay = models.DateField(verbose_name="Дата оплаты")
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, blank=True, null=True, related_name="payments", verbose_name="Пользователь"
+    )
+    date_pay = models.DateField(auto_now_add=True, verbose_name="Дата оплаты")
     course = models.ForeignKey(
         Course, on_delete=models.SET_NULL, related_name="payments", blank=True, null=True, verbose_name="Курс"
     )
@@ -77,3 +79,30 @@ class Payment(models.Model):
     class Meta:
         verbose_name = "платеж"
         verbose_name_plural = "платежи"
+
+
+class TransactionStripe(models.Model):
+    """
+    Представление транзакции через Strip
+    Атрибуты:
+        payment(ForeignKey): Платеж (внешний ключ на модель «Платеж»)
+        strip_pay_id(str): Идентификатор транзакции
+        url_link(str): Ссылка на оплату
+    """
+
+    payment = models.ForeignKey(
+        Payment, related_name="transactions", on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Платеж"
+    )
+    strip_pay_id = models.CharField(max_length=255, blank=True, null=True, verbose_name="Id сессии")
+    url_link = models.URLField(max_length=400, blank=True, null=True, verbose_name="Ссылка на оплату")
+
+    def __str__(self) -> str:
+        """
+        Строковое представление платежа
+        :return: Транзакция ID
+        """
+        return f"{self.strip_pay_id}"
+
+    class Meta:
+        verbose_name = "транзакция"
+        verbose_name_plural = "транзакции"
