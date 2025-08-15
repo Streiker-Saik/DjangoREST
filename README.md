@@ -79,6 +79,7 @@ python -m venv <имя_вашего окружения>
 pip install -r requirements.txt
 ```
 ### При использование POETRY:
+### !!! django-celery-beat установить через PIP, не возможно установить в POETRY !! ### 
 - Активируйте виртуальное окружение
 ```bash
 poetry shell
@@ -91,7 +92,7 @@ poetry install
 ```bash
 poetry add django python-dotenv psycopg2 pillow \
 djangorestframework django-filter djangorestframework_simplejwt \
-coverage django-cors-headers stripe
+coverage django-cors-headers stripe eventlet celery
 poetry add --group lint flake8 black isort mypy==1.16.0
 ```
 - Зайдите в файл .env.example и следуйте инструкция
@@ -100,6 +101,9 @@ poetry add --group lint flake8 black isort mypy==1.16.0
 
 ---
 ## Запуск проекта:
+```bash
+celery -A config worker -l INFO -P eventlet
+```
 Чтобы запустить сервер разработки, выполните следующую команду:
 ```bash
 python manage.py runserver
@@ -150,6 +154,7 @@ DjangoREST/
 ├── config/
 |   ├── __init__.py
 |   ├── asgi.py
+|   ├── celery.py # настройка Celery
 |   ├── settings.py # настройки проекта
 |   ├── urls.py # маршрутизация проета
 |   └── wsgi.py

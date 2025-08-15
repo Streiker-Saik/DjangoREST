@@ -12,6 +12,7 @@ from rest_framework.viewsets import ModelViewSet
 from lms.models import Course, Lesson, Subscription
 from lms.paginators import LmsPaginator
 from lms.serializers import CourseSerializer, LessonSerializer
+from lms.tasks import task_test
 from users.permissions import IsModerator, IsOwner
 
 
