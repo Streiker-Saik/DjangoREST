@@ -15,6 +15,8 @@
     - [Subscription](#subscription)
   - [Paginators lms](#paginators-lms)
   - [Serializers lms](#serializers-lms)
+  - [Services lms](#services-lms)
+  - [Tasks lms](#tasks-lms)
   - [Urls lms](#urls-lms)
   - [Validators lms](#validators-lms)
   - [Views lms](#views-lms)
@@ -185,6 +187,8 @@ DjangoREST/
 |   ├── models.py # модели БД
 |   ├── paginators.py # 
 |   ├── seriazers.py # сериализаторы приложения
+|   ├── services.py # сервисные функции
+|   ├── tasks # отложенные задачи
 |   ├── tests.py 
 |   ├── urls.py # маршрутизация приложения
 |   ├── validators # валидаторы сериализаторов
@@ -270,6 +274,7 @@ DjangoREST/
   - preview(ImageField): Превью курса.
   - description(str): Описание курса.
   - is_subscribed(bool): Если подписка у пользователя
+  - update_at(datetime): Дата и время обновления курса
 - Методы:
   - get_count_lessons(self, obj) -> int: Получение количества уроков в курсе
   - get_is_subscribed(self, obj) -> bool: Есть ли подписка у пользователя

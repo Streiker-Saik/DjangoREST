@@ -16,7 +16,6 @@ from lms.models import Course, Lesson, Subscription
 from lms.paginators import LmsPaginator
 from lms.serializers import CourseSerializer, LessonSerializer
 from lms.services import CourseServices
-from lms.tasks import send_course_update
 from users.permissions import IsModerator, IsOwner
 
 
@@ -78,10 +77,7 @@ class CourseViewSet(ModelViewSet):
 
     @swagger_auto_schema(operation_description="Представление для частичного обновления курса по идентификатору")
     def partial_update(self, request, *args, **kwargs):
-        """Частичное обновление курса, при обновлении больше 4 часов отправляет уведомления подписчикам"""
-        pk = kwargs.get('pk')
-        course = get_object_or_404(Course, pk=pk)
-        CourseServices.send_notif(course)
+
         return super().partial_update(request, *args, **kwargs)
 
     @swagger_auto_schema(operation_description="Представление для удаления курса.")

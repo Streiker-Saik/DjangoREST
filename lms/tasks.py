@@ -3,7 +3,10 @@ from django.core.mail import send_mail
 import smtplib
 from config import settings
 from lms.models import Course, Subscription
+import logging
 
+
+logger = logging.getLogger(__name__)
 
 @shared_task
 def send_course_update(course_id: int) -> None:
@@ -11,23 +14,29 @@ def send_course_update(course_id: int) -> None:
     Отправление уведомления при обновлении курса подписчикам.
     :param course_id: ID курса
     """
-
+    logger.info("Рассылка запущена")
     course = Course.objects.filter(pk=course_id).first()
     if not course:
-        print(f"Курс с ID: {course_id} - не найден")
+        logger.warning(f"Курс с ID:{course_id} - не найден")
+        return
 
     subscribers = Subscription.objects.filter(course=course_id)
+    logger.info(f"Подписчиков: {len(subscribers)}")
 
-    for user in subscribers:
-        email = user.email
+    for subscription in subscribers:
         try:
-            send_mail(
-                subject="Курс был обновлен",
-                message=f"Курс {course.title} был обновлен!",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email]
-            )
-        except smtplib.SMTPException as exc_info:
-            print(f"{email}: {str(exc_info)}")
-        else:
-            print(f"{email}: Сообщение отправлено")
+            email = subscription.user.email
+            try:
+                send_mail(
+                    subject="Курс был обновлен",
+                    message=f"Курс {course.title} был обновлен!",
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[email]
+                )
+                logger.info(f"{email} - Ok")
+            except smtplib.SMTPException as exc_info:
+                logger.warning(str(exc_info))
+        except Exception as exc_info:
+            logger.error(str(exc_info))
+
+
