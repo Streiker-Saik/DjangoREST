@@ -23,20 +23,26 @@ def send_course_update(course_id: int) -> None:
     subscribers = Subscription.objects.filter(course=course_id)
     logger.info(f"Подписчиков: {len(subscribers)}")
 
-    for subscription in subscribers:
-        try:
+    email_list = []
+    try:
+        for subscription in subscribers:
             email = subscription.user.email
+            email_list.append(email)
+
+        if email_list:
             try:
                 send_mail(
                     subject="Курс был обновлен",
                     message=f"Курс {course.title} был обновлен!",
                     from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[email]
+                    recipient_list=email_list
                 )
-                logger.info(f"{email} - Ok")
+                logger.info(f"Отправка прошла успешно")
+
             except smtplib.SMTPException as exc_info:
                 logger.warning(str(exc_info))
-        except Exception as exc_info:
-            logger.error(str(exc_info))
+
+    except Exception as exc_info:
+        logger.error(str(exc_info))
 
 

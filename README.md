@@ -27,6 +27,7 @@
   - [Permissions users](#permissions-users)
   - [Serializers user](#serializers-users)
   - [Services user](#services-users)
+  - [Tasks users](#tasks-users)
   - [Urls user](#urls-users)
   - [Views user](#views-users)
 
@@ -112,10 +113,18 @@ poetry add --group lint flake8 black isort mypy==1.16.0
     ```bash
     celery -A config worker -l INFO -P eventlet
     ```
-- Запуск планировщика (beat). **Выполняется вместе с Celery worker**.  
-  ```bash
-  celery -A config beat -l INFO
-  ```
+- Запуск планировщика (beat). **Выполняется вместе с Celery worker**.
+  - Linux/Mac
+    ```bash
+    celery -A config worker --beat --scheduler django --loglevel=info
+    ```
+  - Windows
+    ```bash
+    celery -A config worker -l INFO -P eventlet
+    ```
+    ```bash
+    celery -A config beat -l info
+    ``` 
 - Чтобы запустить сервер разработки, выполните следующую команду:
   ```bash
   python manage.py runserver
@@ -211,6 +220,7 @@ DjangoREST/
 |   ├── permissions.py # правв доступа
 |   ├── seriazers.py # сериализаторы приложения
 |   ├── services.py # сервисные функции 
+|   ├── tasks # отложенные задачи
 |   ├── tests.py 
 |   ├── urls.py # маршрутизация приложения
 |   └── views.py # конструктор контроллеров
@@ -302,7 +312,7 @@ DjangoREST/
 
 ---
 ## Tasks lms:
-### send_course_update:
+### send_course_update(course_id: int) -> None:
 Отправление уведомления при обновлении курса подписчикам.
 - course_id: ID курса
 
@@ -529,6 +539,14 @@ DjangoREST/
   Создание сессии в Strip
   - check_status(transaction: dict) -> str:  
   Проверка статуса платежа в Strip
+
+[<- на начало](#содержание)
+
+---
+## Tasks users:
+### deactivate_inactive_users() -> None:
+Деактивация пользователей не активных 31 день
+
 
 [<- на начало](#содержание)
 
