@@ -1,7 +1,4 @@
-import datetime
-
 from django.db.models import QuerySet
-from django.utils import timezone
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.generics import (CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView,
@@ -70,7 +67,7 @@ class CourseViewSet(ModelViewSet):
     @swagger_auto_schema(operation_description="Представление для полного обновления курса по идентификатору")
     def update(self, request, *args, **kwargs):
         """Обновление курса, при обновлении больше 4 часов отправляет уведомления подписчикам"""
-        pk = kwargs.get('pk')
+        pk = kwargs.get("pk")
         course = get_object_or_404(Course, pk=pk)
         CourseServices.send_notif(course)
         return super().update(request, *args, **kwargs)

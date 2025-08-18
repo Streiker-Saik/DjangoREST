@@ -6,8 +6,8 @@ from django.utils import timezone
 
 from users.models import User
 
-
 logger = logging.getLogger(__name__)
+
 
 @shared_task
 def deactivate_inactive_users() -> None:
@@ -29,5 +29,4 @@ def deactivate_inactive_users() -> None:
         except Exception as exc_info:
             logger.error(str(exc_info))
 
-    logger.info(f"Проверка завершена")
-
+    logger.info("Проверка завершена")

@@ -46,7 +46,7 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        exclude = ["owner"]
+        exclude = ["owner", "update_at"]
         validators = [DescriptionValidator(field="description")]
 
     def get_count_lessons(self, obj) -> int:

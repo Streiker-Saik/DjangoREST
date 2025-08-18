@@ -1,12 +1,14 @@
+import logging
+import smtplib
+
 from celery import shared_task
 from django.core.mail import send_mail
-import smtplib
+
 from config import settings
 from lms.models import Course, Subscription
-import logging
-
 
 logger = logging.getLogger(__name__)
+
 
 @shared_task
 def send_course_update(course_id: int) -> None:
@@ -35,14 +37,12 @@ def send_course_update(course_id: int) -> None:
                     subject="Курс был обновлен",
                     message=f"Курс {course.title} был обновлен!",
                     from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=email_list
+                    recipient_list=email_list,
                 )
-                logger.info(f"Отправка прошла успешно")
+                logger.info("Отправка прошла успешно")
 
             except smtplib.SMTPException as exc_info:
                 logger.warning(str(exc_info))
 
     except Exception as exc_info:
         logger.error(str(exc_info))
-
-

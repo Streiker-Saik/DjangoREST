@@ -5,6 +5,7 @@ from django.utils import timezone
 from lms.models import Course
 from lms.tasks import send_course_update
 
+
 class CourseServices:
     """
     Сервис работы с курсами
