@@ -11,6 +11,7 @@ class Course(models.Model):
         preview(ImageField): Превью курса
         description(str): Описание курса
         owner(ForeignKey): Владелец (внешний ключ на модель User(Пользователь))
+        update_at(Datetime): Дата и время обновления курса
     """
 
     title = models.CharField(max_length=255, verbose_name="Название курса")
@@ -24,6 +25,7 @@ class Course(models.Model):
         on_delete=models.SET_NULL,
         verbose_name="Владелец",
     )
+    update_at = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name="Обновление курса")
 
     def __str__(self) -> str:
         """

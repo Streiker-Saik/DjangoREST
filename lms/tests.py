@@ -23,7 +23,7 @@ class LmsLessonTestCase(APITestCase):
 
     def test_list_lesson(self):
         """Тестирование просмотра списка уроков"""
-        response = self.client.get(f"/courses/lessons/")
+        response = self.client.get("/courses/lessons/")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -53,7 +53,7 @@ class LmsLessonTestCase(APITestCase):
         self.user.groups.add(group)
         self.client.force_authenticate(user=self.user)
 
-        response = self.client.get(f"/courses/lessons/")
+        response = self.client.get("/courses/lessons/")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -217,7 +217,7 @@ class LmsCourseTestCase(APITestCase):
 
     def test_list_courses(self):
         """Тестирование просмотра списка курсов"""
-        response = self.client.get(f"/courses/")
+        response = self.client.get("/courses/")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 

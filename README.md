@@ -15,6 +15,8 @@
     - [Subscription](#subscription)
   - [Paginators lms](#paginators-lms)
   - [Serializers lms](#serializers-lms)
+  - [Services lms](#services-lms)
+  - [Tasks lms](#tasks-lms)
   - [Urls lms](#urls-lms)
   - [Validators lms](#validators-lms)
   - [Views lms](#views-lms)
@@ -25,6 +27,7 @@
   - [Permissions users](#permissions-users)
   - [Serializers user](#serializers-users)
   - [Services user](#services-users)
+  - [Tasks users](#tasks-users)
   - [Urls user](#urls-users)
   - [Views user](#views-users)
 
@@ -79,6 +82,7 @@ python -m venv <имя_вашего окружения>
 pip install -r requirements.txt
 ```
 ### При использование POETRY:
+### !!! django-celery-beat установить через PIP, не возможно установить в POETRY !! ### 
 - Активируйте виртуальное окружение
 ```bash
 poetry shell
@@ -91,7 +95,7 @@ poetry install
 ```bash
 poetry add django python-dotenv psycopg2 pillow \
 djangorestframework django-filter djangorestframework_simplejwt \
-coverage django-cors-headers stripe
+coverage django-cors-headers stripe eventlet celery
 poetry add --group lint flake8 black isort mypy==1.16.0
 ```
 - Зайдите в файл .env.example и следуйте инструкция
@@ -100,10 +104,31 @@ poetry add --group lint flake8 black isort mypy==1.16.0
 
 ---
 ## Запуск проекта:
-Чтобы запустить сервер разработки, выполните следующую команду:
-```bash
-python manage.py runserver
-```
+- Запуск обработчика очереди (worker)
+  - Linux/Mac
+    ```bash
+    celery -A config worker -l INFO
+    ```
+  - Windows
+    ```bash
+    celery -A config worker -l INFO -P eventlet
+    ```
+- Запуск планировщика (beat). **Выполняется вместе с Celery worker**.
+  - Linux/Mac
+    ```bash
+    celery -A config worker --beat --scheduler django --loglevel=info
+    ```
+  - Windows
+    ```bash
+    celery -A config worker -l INFO -P eventlet
+    ```
+    ```bash
+    celery -A config beat -l info
+    ``` 
+- Чтобы запустить сервер разработки, выполните следующую команду:
+  ```bash
+  python manage.py runserver
+  ```
 
 [<- на начало](#содержание)
 
@@ -150,6 +175,7 @@ DjangoREST/
 ├── config/
 |   ├── __init__.py
 |   ├── asgi.py
+|   ├── celery.py # настройка Celery
 |   ├── settings.py # настройки проекта
 |   ├── urls.py # маршрутизация проета
 |   └── wsgi.py
@@ -170,6 +196,8 @@ DjangoREST/
 |   ├── models.py # модели БД
 |   ├── paginators.py # 
 |   ├── seriazers.py # сериализаторы приложения
+|   ├── services.py # сервисные функции
+|   ├── tasks # отложенные задачи
 |   ├── tests.py 
 |   ├── urls.py # маршрутизация приложения
 |   ├── validators # валидаторы сериализаторов
@@ -192,6 +220,7 @@ DjangoREST/
 |   ├── permissions.py # правв доступа
 |   ├── seriazers.py # сериализаторы приложения
 |   ├── services.py # сервисные функции 
+|   ├── tasks # отложенные задачи
 |   ├── tests.py 
 |   ├── urls.py # маршрутизация приложения
 |   └── views.py # конструктор контроллеров
@@ -218,6 +247,7 @@ DjangoREST/
   - preview(ImageField): Превью курса
   - description(str): Описание курса
   - owner(ForeignKey): Владелец (внешний ключ на модель User(Пользователь))
+  - update_at(Datetime): Дата и время обновления курса
 ### Lesson:
 Представление урока
 - Атрибуты:
@@ -254,6 +284,7 @@ DjangoREST/
   - preview(ImageField): Превью курса.
   - description(str): Описание курса.
   - is_subscribed(bool): Если подписка у пользователя
+  - update_at(datetime): Дата и время обновления курса
 - Методы:
   - get_count_lessons(self, obj) -> int: Получение количества уроков в курсе
   - get_is_subscribed(self, obj) -> bool: Есть ли подписка у пользователя
@@ -270,10 +301,29 @@ DjangoREST/
 [<- на начало](#содержание)
 
 ---
+## Services lms:
+### CourseServices:
+Сервис работы с курсами
+- Методы:
+  - send_notif(course: Course) -> None:  
+  Отправка уведомлений если прошло больше 4 часов после последнего изменения
+
+[<- на начало](#содержание)
+
+---
+## Tasks lms:
+### send_course_update(course_id: int) -> None:
+Отправление уведомления при обновлении курса подписчикам.
+- course_id: ID курса
+
+[<- на начало](#содержание)
+
+---
+
 ## Urls lms:
 - Список курсов (доступны методы: **GET/POST**)
   http://127.0.0.1:8000/courses/
-- Получение урока (доступны методы: **GET/PUT/PATH/DELETE**)
+- Получение курса (доступны методы: **GET/PUT/PATH/DELETE**)
   http://127.0.0.1:8000/courses/(pk)/
   - где (pk) - это, целое число PrimaryKey, ID курса
 - Список уроков (доступны методы: **GET**)
@@ -312,6 +362,7 @@ DjangoREST/
 Представление набора действий для модели Course.  
 Позволяет выполнять операции с курсами:
 отображение списка, создание, отображение, полное обновление, частичное обновление, удаление.
+При обновлении отправляет уведомления подписчикам(если обновлений не было больше 4 часов)
 - Методы:
   - get_queryset(self) -> QuerySet: **!временно отключена!**   
   Возвращает список уроков, к которым у пользователя есть доступ.
@@ -488,6 +539,14 @@ DjangoREST/
   Создание сессии в Strip
   - check_status(transaction: dict) -> str:  
   Проверка статуса платежа в Strip
+
+[<- на начало](#содержание)
+
+---
+## Tasks users:
+### deactivate_inactive_users() -> None:
+Деактивация пользователей не активных 31 день
+
 
 [<- на начало](#содержание)
 
