@@ -6,6 +6,8 @@
 - [Установка Poetry](#установка-poetry)
 - [Установка](#установка)
 - [Запуск проекта](#запуск-проекта)
+  - [Локально](#локально)
+  - [Docker](#docker)
 - [Кастомные команды](#кастомные-команды)
 - [Структура проекта](#структура-проекта)
 - [Приложение lms](#приложение-lms)
@@ -104,6 +106,7 @@ poetry add --group lint flake8 black isort mypy==1.16.0
 
 ---
 ## Запуск проекта:
+### Локально:
 - Запуск обработчика очереди (worker)
   - Linux/Mac
     ```bash
@@ -128,6 +131,28 @@ poetry add --group lint flake8 black isort mypy==1.16.0
 - Чтобы запустить сервер разработки, выполните следующую команду:
   ```bash
   python manage.py runserver
+  ```
+### Docker:
+Сервисы: **web, db, redis, celery, celery-beat**
+- Запуск всех сервисов в [docker-compose.yml](docker-compose.yml)
+  ```bash
+  docker-compose up -d --build
+  ```
+- Остановка с удалением 
+  ```bash
+  docker-compose down
+  ```
+- Просмотр всех запущенных сервисов:
+  ```bash
+  docker-compose ps
+  ```
+- Просмотр логов:
+  ```bash
+  docker-compose logs
+  ```
+  или
+  ```
+  docker-compose logs <сервис>
   ```
 
 [<- на начало](#содержание)
