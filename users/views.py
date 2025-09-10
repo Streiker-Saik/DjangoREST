@@ -52,7 +52,7 @@ class UserCreateAPIView(CreateAPIView):
 
     def perform_create(self, serializer) -> None:
         """Сохраняет нового пользователя и устанавливает его активным."""
-        user = serializer.save(is_active=True)
+        serializer.save(is_active=True)
 
 
 class UserRetrieveAPIView(RetrieveAPIView):
