@@ -197,6 +197,9 @@ python manage.py add_test_data_users
 ## Структура проекта:
 ```
 DjangoREST/
+├── .github/
+|   ├── workflows/
+|   |   └── ci.yml
 ├── config/
 |   ├── __init__.py
 |   ├── asgi.py
@@ -227,6 +230,11 @@ DjangoREST/
 |   ├── urls.py # маршрутизация приложения
 |   ├── validators # валидаторы сериализаторов
 |   └── views.py # конструктор контроллеров
+├── nginx/
+|   ├── Dockerfile
+|   └── nginx.conf
+├── static/
+|   └── ...
 ├── users/ # приложение аутефикации
 |   ├── management/
 |   |   └── commands
@@ -249,9 +257,12 @@ DjangoREST/
 |   ├── tests.py 
 |   ├── urls.py # маршрутизация приложения
 |   └── views.py # конструктор контроллеров
+├── .dockerignore
 ├── .env
 ├── .flake8 # настройка для flake8
 ├── .gitignore
+├── docker-compose.yml
+├── Dockerfile
 ├── poetry.lock
 ├── pypproject.toml # зависимости для poetry
 ├── README.md
