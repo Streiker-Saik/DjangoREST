@@ -174,8 +174,8 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 if "test" in sys.argv:
     DATABASES = {
-        {
-            "default": "django.db.backends.sqlite3",
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "test_db.sqlite3",
         }
     }
