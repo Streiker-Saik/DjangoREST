@@ -17,6 +17,11 @@ jobs:
           ls -la ~/.ssh/
           cat ~/.ssh/id_rsa
 
+      - name: Проверка ключа (начало и конец)
+        run: |
+          head -n 3 ~/.ssh/id_rsa
+          tail -n 3 ~/.ssh/id_rsa
+
       - name: Тест ssh соединения
         run: ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "echo connected"
 
