@@ -44,20 +44,25 @@
 ---
 ## CI:
 ### Убедитесь что ваш сервер настроен:
-### Внесите ключи:
-SECRET_KEY - секретный ключ Django
-SSH_USER - пользователь виртуальной машины
-SERVER_IP - публичный ip виртуальной машины
-SSH_PRIVATE_KEY - приватный ключ на сервере
+### Workflow:
+Применяется при push или pull_request.
+Ключи:
+- SECRET_KEY - секретный ключ Django
+- SSH_USER - пользователь виртуальной машины
+- SERVER_IP - публичный ip виртуальной машины
+- SSH_PRIVATE_KEY - приватный ключ на сервере
 - если его нет: 
   ```
   ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
   ```
-DOCKER_HUB_USERNAME - имя пользователя https://app.docker.com/
-DOCKER_HUB_ACCESS_TOKEN - токен 
+- добавьте этот ключ в файл ~/.ssh/authorized_keys
+  ```
+  echo "сюда_публичный_ключ" | ssh "пользователь"@"сервер" "cat >> ~/.ssh/authorized_keys"
+  ```
+- DOCKER_HUB_USERNAME - имя пользователя https://app.docker.com/
+- DOCKER_HUB_ACCESS_TOKEN - токен 
 
-### Workflow:
-Применяется при push или pull_request.
+
 
 
 ---
