@@ -44,6 +44,15 @@
 ---
 ## CI:
 ### Убедитесь что ваш сервер настроен:
+Подключитесь к виртуальной машине.  
+```sudo apt update``` - для обновления списка пакетов  
+```sudo apt upgrade``` - для обновления всех установленных пакетов до их последних версий  
+```sudo ufw status``` - проверьте состояние файрвола
+```sudo ufw enable``` - файрвол отключен, активируйте его
+```sudo ufw allow 80/tcp``` - открыть порт http  
+```sudo ufw allow 443/tcp``` - открыть порт https  
+```sudo ufw allow 22/tcp``` - открыть порт для ssh 
+```nano .env``` - внесите окружение из файла .env
 ### Workflow:
 Применяется при push или pull_request.
 Ключи:
@@ -61,9 +70,6 @@
   ```
 - DOCKER_HUB_USERNAME - имя пользователя https://app.docker.com/
 - DOCKER_HUB_ACCESS_TOKEN - токен 
-
-
-
 
 ---
 ## Проверить версию Python:
