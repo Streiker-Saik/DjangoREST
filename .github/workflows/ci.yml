@@ -23,7 +23,7 @@ jobs:
           tail -n 3 ~/.ssh/id_rsa
 
       - name: Тест ssh соединения
-        run: ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "echo connected"
+        run: ssh -vvv -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "echo connected"
 
   lint:
     runs-on: ubuntu-latest
