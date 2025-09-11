@@ -3,28 +3,6 @@ name: Django CI
 on: [ push, pull_request ]
 
 jobs:
-  test_connect:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Add SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-      - name: Проверка ключа
-        run: |
-          ls -la ~/.ssh/
-          cat ~/.ssh/id_rsa
-
-      - name: Проверка ключа (начало и конец)
-        run: |
-          head -n 3 ~/.ssh/id_rsa
-          tail -n 3 ~/.ssh/id_rsa
-
-      - name: Тест ssh соединения
-        run: ssh -v -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "echo connected"
-
   lint:
     runs-on: ubuntu-latest
     needs: test_connect
