@@ -108,7 +108,7 @@ class LmsLessonTestCase(APITestCase):
         self.assertEqual(
             response.json(),
             {
-                "id": self.lesson.pk+1,
+                "id": self.lesson.pk + 1,
                 "title": "2.1 Типы данных",
                 "description": None,
                 "preview": None,
@@ -243,7 +243,7 @@ class LmsCourseTestCase(APITestCase):
         self.assertEqual(
             response.json(),
             {
-                "id": self.course.pk+1,
+                "id": self.course.pk + 1,
                 "count_lessons": 0,
                 "lessons": [],
                 "is_subscribed": False,
