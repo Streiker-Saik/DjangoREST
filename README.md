@@ -2,6 +2,7 @@
 
 ## Содержание:
 - [Описание](#описание)
+- [CI](#ci)
 - [Проверить версию Python](#проверить-версию-python)
 - [Установка Poetry](#установка-poetry)
 - [Установка](#установка)
@@ -36,9 +37,39 @@
 
 ## Описание:
 
-Разработка API, с помощью фреймворка Django.
+Разработка API, с помощью фреймворка Django. Добавлено CI
 
 [<- на начало](#содержание)
+
+---
+## CI:
+### Убедитесь что ваш сервер настроен:
+Подключитесь к виртуальной машине.  
+```sudo apt update``` - для обновления списка пакетов  
+```sudo apt upgrade``` - для обновления всех установленных пакетов до их последних версий  
+```sudo ufw status``` - проверьте состояние файрвола
+```sudo ufw enable``` - файрвол отключен, активируйте его
+```sudo ufw allow 80/tcp``` - открыть порт http  
+```sudo ufw allow 443/tcp``` - открыть порт https  
+```sudo ufw allow 22/tcp``` - открыть порт для ssh 
+```nano .env``` - внесите окружение из файла .env
+### Workflow:
+Применяется при push или pull_request.
+Ключи:
+- SECRET_KEY - секретный ключ Django
+- SSH_USER - пользователь виртуальной машины
+- SERVER_IP - публичный ip виртуальной машины
+- SSH_PRIVATE_KEY - приватный ключ на сервере
+- если его нет: 
+  ```
+  ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+  ```
+- добавьте этот ключ в файл ~/.ssh/authorized_keys
+  ```
+  echo "сюда_публичный_ключ" | ssh "пользователь"@"сервер" "cat >> ~/.ssh/authorized_keys"
+  ```
+- DOCKER_HUB_USERNAME - имя пользователя https://app.docker.com/
+- DOCKER_HUB_ACCESS_TOKEN - токен 
 
 ---
 ## Проверить версию Python:
@@ -197,6 +228,9 @@ python manage.py add_test_data_users
 ## Структура проекта:
 ```
 DjangoREST/
+├── .github/
+|   ├── workflows/
+|   |   └── ci.yml
 ├── config/
 |   ├── __init__.py
 |   ├── asgi.py
@@ -227,6 +261,11 @@ DjangoREST/
 |   ├── urls.py # маршрутизация приложения
 |   ├── validators # валидаторы сериализаторов
 |   └── views.py # конструктор контроллеров
+├── nginx/
+|   ├── Dockerfile
+|   └── nginx.conf
+├── static/
+|   └── ...
 ├── users/ # приложение аутефикации
 |   ├── management/
 |   |   └── commands
@@ -249,9 +288,12 @@ DjangoREST/
 |   ├── tests.py 
 |   ├── urls.py # маршрутизация приложения
 |   └── views.py # конструктор контроллеров
+├── .dockerignore
 ├── .env
 ├── .flake8 # настройка для flake8
 ├── .gitignore
+├── docker-compose.yml
+├── Dockerfile
 ├── poetry.lock
 ├── pypproject.toml # зависимости для poetry
 ├── README.md

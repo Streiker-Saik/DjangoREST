@@ -1,5 +1,4 @@
 from django.contrib.auth.models import Group
-from django.db import connection
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -10,10 +9,6 @@ from users.models import User
 class LmsLessonTestCase(APITestCase):
 
     def setUp(self):
-        # Сброс счетчиков до 1
-        with connection.cursor() as cursor:
-            cursor.execute("ALTER SEQUENCE lms_course_id_seq RESTART WITH 1;")
-            cursor.execute("ALTER SEQUENCE lms_lesson_id_seq RESTART WITH 1;")
         # Создание пользователя и ацетификация
         self.user = User.objects.create(email="test@test.com")
         self.client.force_authenticate(user=self.user)
@@ -48,7 +43,7 @@ class LmsLessonTestCase(APITestCase):
 
     def test_list_lesson_is_moderator(self):
         """Тестирование просмотра списка уроков от имена модератора"""
-        Lesson.objects.create(title="Тестовый урок", courses=self.course, owner=None)
+        self.new_lesson = Lesson.objects.create(title="Тестовый урок", courses=self.course, owner=None)
         group = Group.objects.create(name="Moderators")
         self.user.groups.add(group)
         self.client.force_authenticate(user=self.user)
@@ -73,7 +68,7 @@ class LmsLessonTestCase(APITestCase):
                         "courses": self.course.pk,
                     },
                     {
-                        "id": 2,
+                        "id": self.new_lesson.pk,
                         "title": "Тестовый урок",
                         "description": None,
                         "preview": None,
@@ -113,7 +108,7 @@ class LmsLessonTestCase(APITestCase):
         self.assertEqual(
             response.json(),
             {
-                "id": 2,
+                "id": self.lesson.pk + 1,
                 "title": "2.1 Типы данных",
                 "description": None,
                 "preview": None,
@@ -206,9 +201,6 @@ class LmsCourseTestCase(APITestCase):
     """"""
 
     def setUp(self):
-        with connection.cursor() as cursor:
-            cursor.execute("ALTER SEQUENCE lms_course_id_seq RESTART WITH 1;")
-            cursor.execute("ALTER SEQUENCE lms_lesson_id_seq RESTART WITH 1;")
         # Создание пользователя и ацетификация
         self.user = User.objects.create(email="test@test.com")
         self.client.force_authenticate(user=self.user)
@@ -229,7 +221,7 @@ class LmsCourseTestCase(APITestCase):
                 "previous": None,
                 "results": [
                     {
-                        "id": 1,
+                        "id": self.course.pk,
                         "count_lessons": 0,
                         "lessons": [],
                         "is_subscribed": False,
@@ -251,7 +243,7 @@ class LmsCourseTestCase(APITestCase):
         self.assertEqual(
             response.json(),
             {
-                "id": 2,
+                "id": self.course.pk + 1,
                 "count_lessons": 0,
                 "lessons": [],
                 "is_subscribed": False,
